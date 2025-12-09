@@ -27,12 +27,10 @@ let ribbonColors = ['#d42426', '#2a9d8f']; // Red, Teal
 let currentTextColor = '#ffffff';
 let currentHoverBg = '#fff0f0';
 
-// --- Modal Logic ---
-
+// Modal
 function toggleModal(show) {
     if (show) {
         colorModal.classList.remove('tw-hidden');
-        // Small timeout to allow display change to register before opacity transition
         setTimeout(() => colorModal.classList.add('open'), 10);
     } else {
         colorModal.classList.remove('open');
@@ -40,27 +38,22 @@ function toggleModal(show) {
     }
 }
 
-// Global Listeners (These run immediately)
 openColorModalBtn.addEventListener('click', () => toggleModal(true));
 closeModalBtn.addEventListener('click', () => toggleModal(false));
 applyModalBtn.addEventListener('click', () => toggleModal(false));
 
 textColorRow.addEventListener('click', (e) => {
-    // Prevent infinite loop if clicking the input itself triggers bubbling
     if(e.target !== textColorPicker) {
         textColorPicker.click();
     }
 });
 
-// --- P5 Sketch ---
 
 let sketch = function(p) {
-
-    // --- UI THEME UPDATE LOGIC ---
     function updateUITheme() {
         if (ribbonColors.length === 0) return;
 
-        // 1. Download Button Gradient
+        // Download Button Gradient
         let gradientColors = ribbonColors.length === 1
             ? `${ribbonColors[0]}, ${ribbonColors[0]}`
             : ribbonColors.join(', ');
@@ -69,7 +62,7 @@ let sketch = function(p) {
             downloadBtn.style.background = `linear-gradient(45deg, ${gradientColors})`;
         }
 
-        // 2. Upload Button & Slider (Primary Color)
+        // Upload Button & Slider & Text Input Border Color (Primary Color)
         const primaryColorStr = ribbonColors[0];
 
         if(fileUploadBtnLabel) {
@@ -85,8 +78,7 @@ let sketch = function(p) {
             textInput.style.borderColor = '';
         }
 
-        // 3. Calculate Hover Background
-        // Safely use p5 color functions
+        // Calculate Hover Background
         try {
             const primaryColor = p.color(primaryColorStr);
             let white = p.color(255);
@@ -98,7 +90,7 @@ let sketch = function(p) {
         }
     }
 
-    // --- Hover Listeners for Upload Button ---
+    // Hover Listeners for Upload Button
     if(fileUploadBtnLabel) {
         fileUploadBtnLabel.addEventListener('mouseenter', () => {
             fileUploadBtnLabel.style.backgroundColor = currentHoverBg;
@@ -147,7 +139,6 @@ let sketch = function(p) {
 
         p5canvas.mouseWheel(handleScrollZoom);
 
-        // **Initialize UI here (safe for p5 functions)**
         renderRibbonInputs();
         updateUITheme();
 
@@ -158,7 +149,7 @@ let sketch = function(p) {
         p.clear();
         p.background(255, 0);
 
-        // 1. Draw Image
+        // Draw Image
         p.push();
         let ctx = p.drawingContext;
         ctx.save();
@@ -187,7 +178,7 @@ let sketch = function(p) {
         ctx.restore();
         p.pop();
 
-        // 2. Arc Logic
+        // Arc Logic
         let defaultStart = 160;
         let defaultEnd = 300;
         let centerDeg = (defaultStart + defaultEnd) / 2;
@@ -223,12 +214,10 @@ let sketch = function(p) {
             finalEnd = centerDeg + halfSpan;
         }
 
-        // 3. Draw Elements
+        // Draw Elements
         drawMultiColorGradientArc(p, finalStart, finalEnd);
         drawCenteredArcText(p, reversedMsg, finalStart, finalEnd, charSpacingAngle);
     };
-
-    // --- Helper Functions ---
 
     function renderRibbonInputs() {
         ribbonColorsList.innerHTML = '';
