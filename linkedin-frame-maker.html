@@ -3,72 +3,96 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Christmas Frame Generator | Marco Cheng</title>
+        <title>Marco Cheng - Frame Maker</title>
         <link rel="shortcut icon" href="./assets/icon.jpg" type="image/x-icon" />
 
         <link rel="stylesheet" href="./css/tailwind-build.css" />
         <link rel="stylesheet" href="css/index.css" />
+        <link rel="stylesheet" href="css/linkedin-frame-maker.css" />
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
-
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
-
-        <link rel="stylesheet" href="css/linkedin-frame-maker.css">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     </head>
+    <body class="tw-flex tw-min-h-[100vh] tw-flex-col tw-items-center tw-justify-center tw-bg-[#f5f5f5] tw-font-mono tw-text-black">
 
-    <body class="tw-bg-[#f0f2f5] tw-font-mono" style="margin: 0; padding: 0;">
-
-        <header
-            class="tw-absolute tw-top-0 tw-z-50 tw-w-full tw-px-[5%]"
-            style="display: flex; justify-content: space-between; align-items: center; height: 80px;"
-        >
-            <a class="tw-h-[50px] tw-p-[4px] tw-text-2xl tw-font-medium tw-text-black" href="./index.html" style="text-decoration: none; color: black;">
-                Marco
-            </a>
-
-            <a href="./index.html" class="tw-flex tw-h-[40px] tw-place-items-center tw-gap-2 tw-rounded-full tw-bg-black tw-p-1 tw-pl-4 tw-text-white tw-no-underline hover:tw-opacity-80 tw-transition-opacity">
-                <span>Back to Home</span>
-                <div class="tw-flex tw-h-[30px] tw-w-[30px] tw-place-content-center tw-place-items-center tw-rounded-full tw-bg-white tw-font-semibold tw-text-black">
-                    <i class="bi bi-arrow-return-left"></i>
-                </div>
+        <header class="tw-absolute tw-top-0 tw-z-20 tw-flex tw-h-[60px] tw-w-full tw-justify-between tw-px-[5%] tw-py-4">
+             <a class="tw-text-2xl tw-font-medium" href="index.html">Marco</a>
+             <a href="index.html" class="tw-text-sm tw-text-gray-500 hover:tw-text-black">
+                <i class="bi bi-arrow-left"></i> Back
             </a>
         </header>
 
-        <section
-            class="tw-w-full tw-p-4"
-            style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh;"
-        >
-            <div class="frame-maker-container">
-                <h1>LinkedIn Profile Frame</h1>
-                <p>Upload photo to make your #MERRYCHRISTMAS avatar!</p>
+        <div class="frame-maker-container">
+            <h1>Frame Maker</h1>
+            <p>Upload your photo and customize your banner.</p>
 
-                <div id="avatarCanvasContainer" class="canvas-container"></div>
+            <div id="avatarCanvasContainer"></div>
 
-                <div class="controls">
-                    <div class="control-group full-width">
-                        <label for="imageInput" class="file-upload-btn">
-                            <i class="bi bi-upload"></i> Upload Photo
-                            <input type="file" id="imageInput" accept="image/*">
-                        </label>
-                    </div>
+            <div class="controls">
+                <label class="file-upload-btn">
+                    <i class="bi bi-upload"></i> Upload Photo
+                    <input type="file" id="imageInput" accept="image/*">
+                </label>
 
-                    <div class="control-group">
-                        <label for="zoomSlider">Zoom:</label>
-                        <input type="range" id="zoomSlider" min="0.5" max="3.0" step="0.1" value="1.0">
-                    </div>
+                <div class="control-group">
+                    <i class="bi bi-zoom-out"></i>
+                    <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1">
+                    <i class="bi bi-zoom-in"></i>
+                </div>
 
-                    <div class="control-group full-width">
-                        <label for="textInput">Banner Text:</label>
-                        <input type="text" id="textInput" value="#MERRYCHRISTMAS" maxlength="25">
-                    </div>
+                <div class="input-with-settings">
+                    <input type="text" id="textInput" placeholder="#MERRYCHRISTMAS" value="#MERRYCHRISTMAS" maxlength="25">
+                    <button id="openColorModalBtn" class="settings-btn" title="Customize Colors">
+                        <i class="bi bi-palette-fill"></i>
+                    </button>
+                </div>
 
-                    <button id="downloadBtn">Download Avatar</button>
+                <div>
+                    <button id="downloadBtn">Download PNG</button>
+                    <p class="tw-text-gray-400 tw-mt-2" style="font-size: 10px; margin-bottom: 0;">No images will be retained.</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-        <script src="js/linkedin-frame-maker.js"></script>
+        <div id="colorModal" class="modal-overlay tw-hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Customize Colors</h2>
+                    <button id="closeModalBtn" class="close-modal-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="setting-section">
+                        <label>Text Color</label>
+                        <div class="color-picker-row" id="textColorRow">
+                            <input type="color" id="textColorPicker" value="#ffffff">
+                            <span id="textColorLabel" class="color-label-text">#FFFFFF</span>
+                        </div>
+                    </div>
+
+                    <hr class="tw-my-4 tw-border-gray-200">
+
+                    <div class="setting-section">
+                        <label>Ribbon Gradient Colors</label>
+                        <p class="tw-mb-2 tw-text-xs tw-text-gray-500">Add multiple colors to create a gradient.</p>
+
+                        <div id="ribbonColorsList" class="tw-flex tw-flex-col tw-gap-2">
+                            </div>
+
+                        <button id="addRibbonColorBtn" class="add-color-btn tw-mt-3">
+                            <i class="bi bi-plus-circle"></i> Add Color
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="applyModalBtn" class="apply-btn">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+        <script src="./js/linkedin-frame-maker.js"></script>
     </body>
 </html>

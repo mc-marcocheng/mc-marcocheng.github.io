@@ -2,16 +2,114 @@ const imageInput = document.getElementById('imageInput');
 const downloadBtn = document.getElementById('downloadBtn');
 const zoomSlider = document.getElementById('zoomSlider');
 const textInput = document.getElementById('textInput');
+const fileUploadBtnLabel = document.querySelector('.file-upload-btn');
 
+// Modal Elements
+const openColorModalBtn = document.getElementById('openColorModalBtn');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const applyModalBtn = document.getElementById('applyModalBtn');
+const colorModal = document.getElementById('colorModal');
+const textColorPicker = document.getElementById('textColorPicker');
+const textColorLabel = document.getElementById('textColorLabel');
+const textColorRow = document.getElementById('textColorRow');
+const ribbonColorsList = document.getElementById('ribbonColorsList');
+const addRibbonColorBtn = document.getElementById('addRibbonColorBtn');
+
+// Variables
 let userImg = null;
-
 let imgX = 0;
 let imgY = 0;
 let isDragging = false;
 let startX, startY;
 
+// Default Colors
+let ribbonColors = ['#d42426', '#2a9d8f']; // Red, Teal
+let currentTextColor = '#ffffff';
+let currentHoverBg = '#fff0f0';
+
+// --- Modal Logic ---
+
+function toggleModal(show) {
+    if (show) {
+        colorModal.classList.remove('tw-hidden');
+        // Small timeout to allow display change to register before opacity transition
+        setTimeout(() => colorModal.classList.add('open'), 10);
+    } else {
+        colorModal.classList.remove('open');
+        setTimeout(() => colorModal.classList.add('tw-hidden'), 200);
+    }
+}
+
+// Global Listeners (These run immediately)
+openColorModalBtn.addEventListener('click', () => toggleModal(true));
+closeModalBtn.addEventListener('click', () => toggleModal(false));
+applyModalBtn.addEventListener('click', () => toggleModal(false));
+
+textColorRow.addEventListener('click', (e) => {
+    // Prevent infinite loop if clicking the input itself triggers bubbling
+    if(e.target !== textColorPicker) {
+        textColorPicker.click();
+    }
+});
+
+// --- P5 Sketch ---
+
 let sketch = function(p) {
+
+    // --- UI THEME UPDATE LOGIC ---
+    function updateUITheme() {
+        if (ribbonColors.length === 0) return;
+
+        // 1. Download Button Gradient
+        let gradientColors = ribbonColors.length === 1
+            ? `${ribbonColors[0]}, ${ribbonColors[0]}`
+            : ribbonColors.join(', ');
+
+        if(downloadBtn) {
+            downloadBtn.style.background = `linear-gradient(45deg, ${gradientColors})`;
+        }
+
+        // 2. Upload Button & Slider (Primary Color)
+        const primaryColorStr = ribbonColors[0];
+
+        if(fileUploadBtnLabel) {
+            fileUploadBtnLabel.style.borderColor = primaryColorStr;
+            fileUploadBtnLabel.style.color = primaryColorStr;
+        }
+        if(zoomSlider) {
+            zoomSlider.style.accentColor = primaryColorStr;
+        }
+
+        if(textInput) {
+            textInput.style.setProperty('--active-border-color', primaryColorStr);
+            textInput.style.borderColor = '';
+        }
+
+        // 3. Calculate Hover Background
+        // Safely use p5 color functions
+        try {
+            const primaryColor = p.color(primaryColorStr);
+            let white = p.color(255);
+            let lightTint = p.lerpColor(primaryColor, white, 0.92); // 92% white mix
+            currentHoverBg = `rgba(${lightTint.levels[0]}, ${lightTint.levels[1]}, ${lightTint.levels[2]}, ${lightTint.levels[3]/255})`;
+        } catch (e) {
+            console.warn("Color calculation failed", e);
+            currentHoverBg = '#f0f0f0';
+        }
+    }
+
+    // --- Hover Listeners for Upload Button ---
+    if(fileUploadBtnLabel) {
+        fileUploadBtnLabel.addEventListener('mouseenter', () => {
+            fileUploadBtnLabel.style.backgroundColor = currentHoverBg;
+        });
+        fileUploadBtnLabel.addEventListener('mouseleave', () => {
+            fileUploadBtnLabel.style.backgroundColor = 'transparent';
+        });
+    }
+
     p.setup = function() {
+        p.pixelDensity(2);
         let p5canvas = p.createCanvas(400, 400);
         p5canvas.parent('avatarCanvasContainer');
         p.textFont('Montserrat');
@@ -22,22 +120,45 @@ let sketch = function(p) {
         textInput.addEventListener('input', () => p.redraw());
         downloadBtn.addEventListener('click', downloadAvatar);
 
-        // Panning Event Listeners
+        // Modal Input Listeners
+        textColorPicker.addEventListener('input', (e) => {
+            currentTextColor = e.target.value;
+            textColorLabel.textContent = currentTextColor.toUpperCase();
+            p.redraw();
+        });
+
+        addRibbonColorBtn.addEventListener('click', () => {
+            const lastColor = ribbonColors[ribbonColors.length - 1] || '#000000';
+            ribbonColors.push(lastColor);
+            renderRibbonInputs();
+            updateUITheme();
+            p.redraw();
+        });
+
+        // Mouse/Touch Interaction
         p5canvas.elt.addEventListener('mousedown', startDrag);
-        p5canvas.elt.addEventListener('mousemove', drag);
-        p5canvas.elt.addEventListener('mouseup', endDrag);
-        p5canvas.elt.addEventListener('mouseleave', endDrag);
         p5canvas.elt.addEventListener('touchstart', startDrag, {passive: false});
-        p5canvas.elt.addEventListener('touchmove', drag, {passive: false});
-        p5canvas.elt.addEventListener('touchend', endDrag);
+
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('touchmove', drag, {passive: false});
+
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+
+        p5canvas.mouseWheel(handleScrollZoom);
+
+        // **Initialize UI here (safe for p5 functions)**
+        renderRibbonInputs();
+        updateUITheme();
 
         p.noLoop();
     };
 
     p.draw = function() {
         p.clear();
-        p.background(240);
+        p.background(255, 0);
 
+        // 1. Draw Image
         p.push();
         let ctx = p.drawingContext;
         ctx.save();
@@ -63,13 +184,12 @@ let sketch = function(p) {
         } else {
             drawPlaceholder(p);
         }
-
         ctx.restore();
         p.pop();
 
+        // 2. Arc Logic
         let defaultStart = 160;
         let defaultEnd = 300;
-
         let centerDeg = (defaultStart + defaultEnd) / 2;
 
         let msg = textInput.value || " ";
@@ -103,12 +223,64 @@ let sketch = function(p) {
             finalEnd = centerDeg + halfSpan;
         }
 
-        drawChristmasGradientArc(p, finalStart, finalEnd);
+        // 3. Draw Elements
+        drawMultiColorGradientArc(p, finalStart, finalEnd);
         drawCenteredArcText(p, reversedMsg, finalStart, finalEnd, charSpacingAngle);
     };
 
+    // --- Helper Functions ---
+
+    function renderRibbonInputs() {
+        ribbonColorsList.innerHTML = '';
+
+        ribbonColors.forEach((color, index) => {
+            const row = document.createElement('div');
+            row.className = 'color-picker-row';
+
+            const input = document.createElement('input');
+            input.type = 'color';
+            input.value = color;
+            input.addEventListener('input', (e) => {
+                ribbonColors[index] = e.target.value;
+                label.textContent = e.target.value.toUpperCase();
+                updateUITheme();
+                p.redraw();
+            });
+
+            const label = document.createElement('span');
+            label.className = 'color-label-text';
+            label.textContent = color.toUpperCase();
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'remove-color-btn';
+            delBtn.innerHTML = '<i class="bi bi-trash"></i>';
+            if (ribbonColors.length <= 1) {
+                delBtn.style.display = 'none';
+            }
+
+            delBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                ribbonColors.splice(index, 1);
+                renderRibbonInputs();
+                updateUITheme();
+                p.redraw();
+            });
+
+            row.addEventListener('click', (e) => {
+                if (e.target !== input && e.target !== delBtn && !delBtn.contains(e.target)) {
+                    input.click();
+                }
+            });
+
+            row.appendChild(input);
+            row.appendChild(label);
+            row.appendChild(delBtn);
+            ribbonColorsList.appendChild(row);
+        });
+    }
 
     function startDrag(e) {
+        if (!userImg) return;
         isDragging = true;
         let clientX = e.touches ? e.touches[0].clientX : e.clientX;
         let clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -118,7 +290,6 @@ let sketch = function(p) {
 
     function drag(e) {
         if (!isDragging || !userImg) return;
-        e.preventDefault();
         let clientX = e.touches ? e.touches[0].clientX : e.clientX;
         let clientY = e.touches ? e.touches[0].clientY : e.clientY;
         imgX = clientX - startX;
@@ -130,6 +301,18 @@ let sketch = function(p) {
         isDragging = false;
     }
 
+    function handleScrollZoom(event) {
+        if (!userImg) return false;
+        let zoomStep = 0.1;
+        let currentZoom = parseFloat(zoomSlider.value);
+        if (event.deltaY > 0) {
+            zoomSlider.value = Math.max(parseFloat(zoomSlider.min), currentZoom - zoomStep);
+        } else {
+            zoomSlider.value = Math.min(parseFloat(zoomSlider.max), currentZoom + zoomStep);
+        }
+        p.redraw();
+        return false;
+    }
 
     function handleFile(e) {
         const file = e.target.files[0];
@@ -145,16 +328,21 @@ let sketch = function(p) {
     }
 
     function drawPlaceholder(p) {
-        p.fill(220);
+        p.fill(245);
         p.rect(0, 0, p.width, p.height);
-        p.fill(100);
+        p.textStyle(p.NORMAL);
+        p.fill(180);
         p.noStroke();
         p.textAlign(p.CENTER, p.CENTER);
         p.textSize(16);
-        p.text("Upload Photo", p.width/2, p.height/2);
+        p.text("No Image Selected", p.width/2, p.height/2);
     }
 
-    function drawChristmasGradientArc(p, startDeg, endDeg) {
+    function drawMultiColorGradientArc(p, startDeg, endDeg) {
+        if (ribbonColors.length === 0) return;
+
+        let colorsToDraw = [...ribbonColors].reverse();
+
         p.push();
         p.noFill();
         p.strokeCap(p.ROUND);
@@ -163,23 +351,45 @@ let sketch = function(p) {
         p.strokeWeight(weight);
 
         let ctx = p.drawingContext;
-
         let startRad = p.radians(startDeg - 90);
         let grad = ctx.createConicGradient(startRad, p.width/2, p.height/2);
 
         let spanDeg = endDeg - startDeg;
         let spanRatio = spanDeg / 360.0;
 
-        // Fade in
-        grad.addColorStop(0, 'rgba(212, 36, 38, 0)');
-        grad.addColorStop(0.1 * spanRatio, '#d42426');
+        let fadePct = 0.1;
 
-        // Transition
-        grad.addColorStop(0.5 * spanRatio, '#2a9d8f');
+        grad.addColorStop(0, 'rgba(0,0,0,0)');
 
-        // Fade out
-        grad.addColorStop(0.9 * spanRatio, '#2a9d8f');
-        grad.addColorStop(spanRatio, 'rgba(42, 157, 143, 0)');
+        let firstColor = p.color(colorsToDraw[0]);
+        let firstColorTransparent = p.color(colorsToDraw[0]);
+        firstColorTransparent.setAlpha(0);
+
+        grad.addColorStop(0, firstColorTransparent.toString());
+        grad.addColorStop(fadePct * spanRatio, firstColor.toString());
+
+        let activeStart = fadePct * spanRatio;
+        let activeEnd = (1 - fadePct) * spanRatio;
+        let activeSpan = activeEnd - activeStart;
+
+        if (colorsToDraw.length > 1) {
+            for (let i = 0; i < colorsToDraw.length; i++) {
+                let relativePos = i / (colorsToDraw.length - 1);
+                let actualPos = activeStart + (relativePos * activeSpan);
+                grad.addColorStop(actualPos, colorsToDraw[i]);
+            }
+        } else {
+            grad.addColorStop(activeStart, colorsToDraw[0]);
+            grad.addColorStop(activeEnd, colorsToDraw[0]);
+        }
+
+        let lastColor = p.color(colorsToDraw[colorsToDraw.length - 1]);
+        let lastColorTransparent = p.color(colorsToDraw[colorsToDraw.length - 1]);
+        lastColorTransparent.setAlpha(0);
+
+        grad.addColorStop((1 - fadePct) * spanRatio, lastColor.toString());
+        grad.addColorStop(spanRatio, lastColorTransparent.toString());
+        grad.addColorStop(spanRatio + 0.001, 'rgba(0,0,0,0)');
 
         ctx.strokeStyle = grad;
 
@@ -195,7 +405,7 @@ let sketch = function(p) {
         p.textAlign(p.CENTER, p.CENTER);
         p.textSize(p.width * 0.075);
         p.textStyle(p.BOLD);
-        p.fill(255);
+        p.fill(currentTextColor);
         p.noStroke();
 
         let weight = p.width * 0.14;
@@ -234,7 +444,7 @@ let sketch = function(p) {
 
     function downloadAvatar() {
         let fileName = textInput.value.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-        p.saveCanvas(fileName || 'christmas-avatar', 'png');
+        p.saveCanvas(fileName || 'marco-frame', 'png');
     }
 };
 
