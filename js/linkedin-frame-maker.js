@@ -8,6 +8,7 @@ const fileUploadBtnLabel = document.querySelector('.file-upload-btn');
 const openColorModalBtn = document.getElementById('openColorModalBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const applyModalBtn = document.getElementById('applyModalBtn');
+const undoModalBtn = document.getElementById('undoModalBtn');
 const colorModal = document.getElementById('colorModal');
 const textColorPicker = document.getElementById('textColorPicker');
 const textColorLabel = document.getElementById('textColorLabel');
@@ -27,9 +28,50 @@ let ribbonColors = ['#d42426', '#2a9d8f']; // Red, Teal
 let currentTextColor = '#ffffff';
 let currentHoverBg = '#fff0f0';
 
+// History
+let historyStack = [];
+
+function saveState() {
+    const state = {
+        ribbonColors: [...ribbonColors],
+        textColor: currentTextColor
+    };
+    historyStack.push(state);
+    updateUndoBtnUI();
+}
+
+function restoreState() {
+    if (historyStack.length === 0) return;
+
+    const previousState = historyStack.pop();
+
+    // Apply state
+    ribbonColors = previousState.ribbonColors;
+    currentTextColor = previousState.textColor;
+
+    // Update UI elements to match new state
+    textColorPicker.value = currentTextColor;
+    textColorLabel.textContent = currentTextColor.toUpperCase();
+
+    // Trigger global refresh
+    if(window.refreshFrameMakerUI) {
+        window.refreshFrameMakerUI();
+    }
+
+    updateUndoBtnUI();
+}
+
+function updateUndoBtnUI() {
+    undoModalBtn.disabled = historyStack.length === 0;
+}
+
+undoModalBtn.addEventListener('click', restoreState);
+
 // Modal
 function toggleModal(show) {
     if (show) {
+        updateUndoBtnUI();
+
         colorModal.classList.remove('tw-hidden');
         setTimeout(() => colorModal.classList.add('open'), 10);
     } else {
@@ -48,8 +90,29 @@ textColorRow.addEventListener('click', (e) => {
     }
 });
 
+textColorPicker.addEventListener('click', () => {
+    saveState();
+});
+
+textColorPicker.addEventListener('input', (e) => {
+    currentTextColor = e.target.value;
+    textColorLabel.textContent = currentTextColor.toUpperCase();
+    if(window.redrawFrameMaker) window.redrawFrameMaker();
+});
+
 
 let sketch = function(p) {
+
+    window.refreshFrameMakerUI = function() {
+        renderRibbonInputs();
+        updateUITheme();
+        p.redraw();
+    };
+
+    window.redrawFrameMaker = function() {
+        p.redraw();
+    }
+
     function updateUITheme() {
         if (ribbonColors.length === 0) return;
 
@@ -62,7 +125,7 @@ let sketch = function(p) {
             downloadBtn.style.background = `linear-gradient(45deg, ${gradientColors})`;
         }
 
-        // Upload Button & Slider & Text Input Border Color (Primary Color)
+        // UI Accents
         const primaryColorStr = ribbonColors[0];
 
         if(fileUploadBtnLabel) {
@@ -82,15 +145,13 @@ let sketch = function(p) {
         try {
             const primaryColor = p.color(primaryColorStr);
             let white = p.color(255);
-            let lightTint = p.lerpColor(primaryColor, white, 0.92); // 92% white mix
+            let lightTint = p.lerpColor(primaryColor, white, 0.92);
             currentHoverBg = `rgba(${lightTint.levels[0]}, ${lightTint.levels[1]}, ${lightTint.levels[2]}, ${lightTint.levels[3]/255})`;
         } catch (e) {
-            console.warn("Color calculation failed", e);
             currentHoverBg = '#f0f0f0';
         }
     }
 
-    // Hover Listeners for Upload Button
     if(fileUploadBtnLabel) {
         fileUploadBtnLabel.addEventListener('mouseenter', () => {
             fileUploadBtnLabel.style.backgroundColor = currentHoverBg;
@@ -106,20 +167,13 @@ let sketch = function(p) {
         p5canvas.parent('avatarCanvasContainer');
         p.textFont('Montserrat');
 
-        // Listeners
         imageInput.addEventListener('change', handleFile);
         zoomSlider.addEventListener('input', () => p.redraw());
         textInput.addEventListener('input', () => p.redraw());
         downloadBtn.addEventListener('click', downloadAvatar);
 
-        // Modal Input Listeners
-        textColorPicker.addEventListener('input', (e) => {
-            currentTextColor = e.target.value;
-            textColorLabel.textContent = currentTextColor.toUpperCase();
-            p.redraw();
-        });
-
         addRibbonColorBtn.addEventListener('click', () => {
+            saveState(); // Save before adding
             const lastColor = ribbonColors[ribbonColors.length - 1] || '#000000';
             ribbonColors.push(lastColor);
             renderRibbonInputs();
@@ -127,7 +181,6 @@ let sketch = function(p) {
             p.redraw();
         });
 
-        // Mouse/Touch Interaction
         p5canvas.elt.addEventListener('mousedown', startDrag);
         p5canvas.elt.addEventListener('touchstart', startDrag, {passive: false});
 
@@ -214,7 +267,6 @@ let sketch = function(p) {
             finalEnd = centerDeg + halfSpan;
         }
 
-        // Draw Elements
         drawMultiColorGradientArc(p, finalStart, finalEnd);
         drawCenteredArcText(p, reversedMsg, finalStart, finalEnd, charSpacingAngle);
     };
@@ -229,6 +281,11 @@ let sketch = function(p) {
             const input = document.createElement('input');
             input.type = 'color';
             input.value = color;
+
+            input.addEventListener('click', () => {
+               saveState();
+            });
+
             input.addEventListener('input', (e) => {
                 ribbonColors[index] = e.target.value;
                 label.textContent = e.target.value.toUpperCase();
@@ -249,6 +306,7 @@ let sketch = function(p) {
 
             delBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
+                saveState();
                 ribbonColors.splice(index, 1);
                 renderRibbonInputs();
                 updateUITheme();

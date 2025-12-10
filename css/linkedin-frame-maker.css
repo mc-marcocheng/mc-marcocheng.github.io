@@ -327,16 +327,48 @@ input[type="color"]::-webkit-color-swatch {
 .modal-footer {
     padding: 15px 20px;
     border-top: 1px solid #eee;
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .apply-btn {
     background: #1a1a1a;
     color: white;
     border: none;
-    padding: 8px 20px;
-    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-weight: 600;
+    font-size: 1.2rem;
+    transition: background 0.2s;
 }
 .apply-btn:hover { background: #333; }
+
+.undo-btn {
+    background: #f0f0f0;
+    color: #555;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+}
+
+.undo-btn:hover:not(:disabled) {
+    background: #e0e0e0;
+    color: #000;
+}
+
+.undo-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
