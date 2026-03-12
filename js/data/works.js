@@ -1,5 +1,14 @@
 export const works = [
     {
+        company: "UBS",
+        role: "Senior Data Scientist",
+        image: "./assets/images/work/ubs.jpg",
+        description: `• Made multi-agent systems to automate trade-execution document auditing and client requests.<br>
+• Integrated AI agents communication protocols (MCP, A2A) and OAuth to ensure compliant data exchange.<br>
+• Built AI Copilot to intelligently populate and modify forms based on historical data.`,
+        roundedImage: false
+    },
+    {
         company: "Risksis",
         role: "Senior Software Engineer, AI Researcher",
         image: "./assets/images/work/risksis.jpg",
@@ -17,7 +26,7 @@ export const works = [
 • Chatbot solutions for e-commerce, knowledge retrieval, education, code generation.<br>
 • MTR virtual service ambassador for enquiry service to passengers.<br>
 • Developed Cantonese text-to-speech voice models.`,
-        roundedImage: true
+        roundedImage: false
     },
     {
         company: "Pantheon Lab",
@@ -26,7 +35,7 @@ export const works = [
         description: `• Face swap, face enhancement algorithms.<br>
 • LAB color space background removal.<br>
 • Image diffusion LORA training. Data pipeline engineering.`,
-        roundedImage: true
+        roundedImage: false
     },
     {
         company: "CUHK",

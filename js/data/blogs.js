@@ -1,5 +1,11 @@
 export const blogs = [
     {
+        title: "Zest Watcher",
+        url: "https://mccheng.substack.com/p/mastering-the-hang-seng-monitoring",
+        image: "./assets/images/blogs/zest_watcher.png",
+        description: "A multi-agent AI platform for real-time Hong Kong stock news analysis and interactive financial insights."
+    },
+    {
         title: "ReMind",
         url: "https://www.linkedin.com/posts/mc-cheng_github-mc-marcochengremind-your-ultimate-activity-7334873180131512320-lxDk",
         image: "./assets/images/blogs/remind.png",
