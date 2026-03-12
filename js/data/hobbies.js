@@ -1,7 +1,7 @@
 export const hobbies = [
     {
         title: "Calisthenics",
-        image: "./assets/images/home/front_lever.png",
+        image: "./assets/images/home/full_planche.png",
         description: "Strength training without going to gym. Trying to hold full planche for longer."
     },
     {
