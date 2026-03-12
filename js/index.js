@@ -1,3 +1,25 @@
+import { hobbies } from './data/hobbies.js';
+import { works } from './data/works.js';
+import { blogs } from './data/blogs.js';
+import { createHobbyCard, createWorkCard, createBlogCard } from './components.js';
+
+// Render content first
+const hobbiesContainer = document.getElementById('hobbies-container');
+if (hobbiesContainer) {
+    hobbiesContainer.innerHTML = hobbies.map(createHobbyCard).join('');
+}
+
+const worksContainer = document.getElementById('works-container');
+if (worksContainer) {
+    worksContainer.innerHTML = works.map(createWorkCard).join('');
+}
+
+const blogsContainer = document.getElementById('blogs-container');
+if (blogsContainer) {
+    blogsContainer.innerHTML = blogs.map(createBlogCard).join('');
+}
+
+
 // initialization
 
 const RESPONSIVE_WIDTH = 1024
@@ -39,6 +61,9 @@ function toggleHeader() {
 
     }
 }
+
+// Make it global so HTML onclick can access it
+window.toggleHeader = toggleHeader;
 
 function responsive() {
     if (window.innerWidth > RESPONSIVE_WIDTH) {
@@ -119,6 +144,4 @@ sections.forEach((sec) => {
 
 
 })
-
-
 
