@@ -1,6 +1,6 @@
 export function createHobbyCard(hobby) {
     return `
-    <div class="reveal-up tw-flex tw-h-fit tw-w-[450px] tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg max-lg:tw-w-full max-lg:tw-max-w-[400px]">
+    <div class="reveal-up tw-flex tw-h-fit tw-w-full tw-max-w-[450px] tw-mx-auto tw-break-inside-avoid tw-flex-col tw-gap-2 tw-rounded-lg tw-bg-[#f3f3f3b4] tw-p-4 tw-shadow-lg">
         <div class="tw-flex tw-place-items-center tw-gap-3">
             <div class="tw-h-[300px] tw-w-full tw-overflow-hidden tw-rounded-lg">
                 <img
