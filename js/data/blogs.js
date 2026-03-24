@@ -1,5 +1,11 @@
 export const blogs = [
     {
+        title: "Claude Certified Architect Study Guide",
+        url: "https://open.substack.com/pub/mccheng/p/how-to-pass-the-claude-certified",
+        image: "./assets/images/blogs/claude_architect_guide.png",
+        description: "A 3-hour study material for passing the Claude Certified Architect Exam."
+    },
+    {
         title: "Zest Watcher",
         url: "https://mccheng.substack.com/p/mastering-the-hang-seng-monitoring",
         image: "./assets/images/blogs/zest_watcher.png",
