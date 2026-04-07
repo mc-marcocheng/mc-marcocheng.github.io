@@ -4,10 +4,11 @@ let currentSearchQuery = "";
 let isMapFocused = false; // Tracks if mobile user is looking at the map or the list
 let isHeaderCollapsed = false;
 
-// Pagination State
-let currentPage = 1;
-const itemsPerPage = 8;
+// Infinite Scroll State
 let currentFilteredData = [];
+let displayedItems = [];
+const itemsPerPage = 8;
+let isLoadingMore = false;
 
 function initCollapsibleHeader() {
     const header = document.querySelector("#search-aside .border-b");
@@ -123,7 +124,7 @@ async function start() {
     // --- Search Logic ---
     document.getElementById("search-input").addEventListener("input", (e) => {
         currentSearchQuery = e.target.value.toLowerCase();
-        currentPage = 1; // Reset to page 1 on search
+        resetInfiniteScroll();
         updateView();
     });
 
@@ -133,7 +134,7 @@ async function start() {
             (pos) => {
                 calculateDistances(pos.coords.latitude, pos.coords.longitude);
                 updateLocationMarker(pos.coords.latitude, pos.coords.longitude);
-                currentPage = 1; // Reset to page 1 after sort
+                resetInfiniteScroll();
                 updateView();
 
                 // If on mobile, stay on list to see the results
@@ -173,7 +174,7 @@ async function start() {
 
         calculateDistances(e.latlng.lat, e.latlng.lng);
         updateLocationMarker(e.latlng.lat, e.latlng.lng);
-        currentPage = 1;
+        resetInfiniteScroll();
         updateView();
 
         // Exit drop pin mode and slide the search panel back up
@@ -251,7 +252,7 @@ function initFilters() {
             activeFilters = pill.classList.contains("active")
                 ? [...activeFilters, val]
                 : activeFilters.filter((f) => f !== val);
-            currentPage = 1; // Reset on filter change
+            resetInfiniteScroll();
             updateView();
         });
     });
@@ -339,28 +340,78 @@ function updateView() {
         return matchesSearch && matchesFilter;
     });
 
-    // Pagination Calculation
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedData = currentFilteredData.slice(startIndex, startIndex + itemsPerPage);
+    // Load initial batch if none displayed yet
+    if (displayedItems.length === 0 && currentFilteredData.length > 0) {
+        displayedItems = currentFilteredData.slice(0, itemsPerPage);
+    }
 
     // Render components
-    renderList(paginatedData);
-    renderPagination(currentFilteredData.length);
+    renderList(displayedItems);
+    renderScrollFooter(currentFilteredData.length, displayedItems.length, isLoadingMore);
     renderMarkers(currentFilteredData);
+    setupInfiniteScroll();
 }
 
 /**
- * Handles page increment/decrement
+ * Resets infinite scroll state
  */
-function changePage(delta) {
-    const maxPage = Math.ceil(currentFilteredData.length / itemsPerPage);
-    currentPage += delta;
-    if (currentPage < 1) currentPage = 1;
-    if (currentPage > maxPage) currentPage = maxPage;
-    updateView();
+function resetInfiniteScroll() {
+    displayedItems = [];
+    isLoadingMore = false;
+}
 
-    // Scroll list back to top on page change
-    document.getElementById("park-list").scrollTo({ top: 0, behavior: "smooth" });
+/**
+ * Sets up infinite scroll listener
+ */
+function setupInfiniteScroll() {
+    const container = document.getElementById("park-list");
+    container.removeEventListener("scroll", handleScroll);
+    container.addEventListener("scroll", handleScroll);
+}
+
+/**
+ * Handles scroll event for infinite loading
+ */
+function handleScroll() {
+    const container = document.getElementById("park-list");
+    const threshold = 100; // pixels from bottom to trigger load
+
+    if (isLoadingMore) return;
+    if (displayedItems.length >= currentFilteredData.length) return;
+
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - threshold) {
+        loadMoreItems();
+    }
+}
+
+/**
+ * Loads more items into the list
+ */
+function loadMoreItems() {
+    isLoadingMore = true;
+    const nextItems = currentFilteredData.slice(
+        displayedItems.length,
+        displayedItems.length + itemsPerPage
+    );
+
+    displayedItems = [...displayedItems, ...nextItems];
+    renderList(displayedItems, nextItems);
+
+    // Show loading indicator if there are more items to load
+    if (displayedItems.length < currentFilteredData.length) {
+        setTimeout(() => {
+            isLoadingMore = false;
+            renderScrollFooter(currentFilteredData.length, displayedItems.length, isLoadingMore);
+        }, 300); // Simulate loading delay for better UX
+    } else {
+        isLoadingMore = false;
+    }
+
+    renderScrollFooter(currentFilteredData.length, displayedItems.length, isLoadingMore);
 }
 
 // Start the engine

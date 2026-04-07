@@ -162,7 +162,7 @@ body {
 
     /* More aggressive space saving for mobile */
     #btn-geolocate,
-    #btn -drop-pin {
+    #btn-drop-pin {
         padding: 0.5rem 0.75rem !important;
         font-size: 0.75rem !important;
     }
@@ -320,4 +320,25 @@ body {
 /* Prevent interaction with map when modal is open */
 body.modal-open {
     overflow: hidden;
+}
+
+/* Infinite Scroll - Fade in animation for new items */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.park-card.animate-new {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Hide pagination footer when empty */
+#pagination:empty {
+    display: none;
 }

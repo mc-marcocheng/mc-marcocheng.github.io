@@ -7,7 +7,7 @@ function buildImagePath(parkId, imgName) {
     return `assets/parks/${parkId}/${imgName}`;
 }
 
-function renderList(parks) {
+function renderList(parks, newlyAdded = []) {
     const container = document.getElementById("park-list");
 
     if (parks.length === 0) {
@@ -15,54 +15,80 @@ function renderList(parks) {
         return;
     }
 
-    container.innerHTML = parks
-        .map((p) => {
-            const imageSrc =
-                p.park_images && p.park_images.length > 0
-                    ? buildImagePath(p.id, p.park_images[0])
-                    : "https://via.placeholder.com/150?text=No+Image";
+    const isNewLoad = newlyAdded.length === 0;
 
-            const district =
-                p.district && p.district.zh
-                    ? p.district.zh
-                    : p.district && p.district.en
-                      ? p.district.en
-                      : "未知";
-
-            return `
-            <div class="park-card glass-panel flex cursor-pointer gap-4 rounded-2xl p-3 transition" onclick="openModal('${p.id}')">
-                <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-200 shadow-sm">
-                    <img src="${imageSrc}" class="h-full w-full object-cover">
-                </div>
-                <div class="flex-1 overflow-hidden flex flex-col justify-center">
-                    <h3 class="truncate text-base font-black text-slate-800">${p.name.zh || p.name.en}</h3>
-                    <p class="truncate text-xs font-semibold text-slate-500">${p.name.en || ""} • ${district}</p>
-                    ${p.distance ? `<p class="mt-1 text-xs font-bold text-blue-600">距離 ${p.distance.toFixed(2)} 公里</p>` : ""}
-                </div>
-            </div>
-        `;
-        })
-        .join("");
+    if (isNewLoad) {
+        container.innerHTML = parks.map((p) => createParkCardHTML(p, false)).join("");
+    } else {
+        // Append only newly added cards with animation
+        const newCards = newlyAdded.map((p) => createParkCardHTML(p, true)).join("");
+        container.insertAdjacentHTML("beforeend", newCards);
+    }
 }
 
-function renderPagination(totalItems) {
+function createParkCardHTML(p, animate = false) {
+    const imageSrc =
+        p.park_images && p.park_images.length > 0
+            ? buildImagePath(p.id, p.park_images[0])
+            : "https://via.placeholder.com/150?text=No+Image";
+
+    const district =
+        p.district && p.district.zh
+            ? p.district.zh
+            : p.district && p.district.en
+              ? p.district.en
+              : "未知";
+
+    const animateClass = animate ? " animate-new" : "";
+
+    return `
+    <div class="park-card glass-panel${animateClass} flex cursor-pointer gap-4 rounded-2xl p-3 transition" onclick="openModal('${p.id}')">
+        <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-200 shadow-sm">
+            <img src="${imageSrc}" class="h-full w-full object-cover">
+        </div>
+        <div class="flex-1 overflow-hidden flex flex-col justify-center">
+            <h3 class="truncate text-base font-black text-slate-800">${p.name.zh || p.name.en}</h3>
+            <p class="truncate text-xs font-semibold text-slate-500">${p.name.en || ""} • ${district}</p>
+            ${p.distance ? `<p class="mt-1 text-xs font-bold text-blue-600">距離 ${p.distance.toFixed(2)} 公里</p>` : ""}
+        </div>
+    </div>
+`;
+}
+
+function renderScrollFooter(totalItems, displayedCount, isLoading) {
     const container = document.getElementById("pagination");
-    const maxPage = Math.ceil(totalItems / itemsPerPage) || 1;
 
     if (totalItems === 0) {
-        container.innerHTML = `<span class="text-xs text-slate-500">0 筆結果</span>`;
+        container.innerHTML = `
+            <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
+                <span>0 筆結果</span>
+            </div>
+        `;
         return;
     }
 
-    container.innerHTML = `
-        <button onclick="changePage(-1)" class="rounded-lg p-2 text-slate-600 transition hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent" ${currentPage === 1 ? "disabled" : ""}>
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <span class="text-xs font-bold text-slate-700">第 ${currentPage} 頁 / 共 ${maxPage} 頁</span>
-        <button onclick="changePage(1)" class="rounded-lg p-2 text-slate-600 transition hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent" ${currentPage === maxPage ? "disabled" : ""}>
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </button>
-    `;
+    if (isLoading) {
+        // Show loading indicator only when actively loading
+        container.innerHTML = `
+            <div class="flex items-center justify-center gap-2 text-xs text-slate-500">
+                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2.5-8a8 8 0 017.5 7.5H17a8 8 0 00-7.5-7.5z"></path>
+                </svg>
+                <span>載入中...</span>
+            </div>
+        `;
+    } else if (displayedCount >= totalItems) {
+        // Show "no more results" message
+        container.innerHTML = `
+            <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
+                <span>共 ${totalItems} 筆結果</span>
+            </div>
+        `;
+    } else {
+        // Hide footer when there are more items to load
+        container.innerHTML = "";
+    }
 }
 
 function openModal(id) {
