@@ -13,12 +13,15 @@ Portfolio site with Tailwind CSS build workflows.
 npm install
 ```
 
+## Available npm scripts
+
+- `npm run start:tailwind` - Tailwind dev watch mode
+- `npm run build:tailwind` - Tailwind production build + minify
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Auto-fix ESLint issues
+- `npm run format` - Format all files with Prettier
+
 ## Tailwind build workflow
-
-The project includes these npm scripts in `package.json`:
-
-- `npm run start:tailwind` : development watch mode
-- `npm run build:tailwind` : production build + minify
 
 ### Development (watch + auto-rebuild)
 
@@ -26,7 +29,7 @@ The project includes these npm scripts in `package.json`:
 npm run start:tailwind
 ```
 
-- Watches `tailwind.css` (source) and recompiles to `tailwind-runtime.css`.
+- Watches `css/tailwind.css` and recompiles to `css/tailwind-runtime.css`.
 - Use while editing UI styles.
 
 ### Production build
@@ -35,23 +38,14 @@ npm run start:tailwind
 npm run build:tailwind
 ```
 
-- Compiles `tailwind.css` to `tailwind-build.css` with minification.
+- Compiles `css/tailwind.css` to `css/tailwind-build.css` with minification.
 
 ## Local web server
 
-You can serve the site locally using any static server.
-
-### Option 1: Python 3 built-in server
+Serve the site locally:
 
 ```bash
-python -m http.server 8000
+npx serve .
 ```
 
-Open `http://localhost:8000`.
-
-### Option 2: Node `http-server`
-
-```bash
-npm install --global http-server
-http-server -p 8000
-```
+Open `http://localhost:3000`.
