@@ -3,7 +3,7 @@ let userLocation = null;
 
 async function fetchParks() {
     try {
-        const res = await fetch("assets/data/parks.json");
+        const res = await fetch("/assets/data/parks.json");
         parksData = await res.json();
     } catch (e) {
         console.error("Data load failed", e);
