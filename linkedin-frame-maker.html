@@ -11,14 +11,23 @@
         <link rel="stylesheet" href="css/linkedin-frame-maker.css" />
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap"
+            rel="stylesheet"
+        />
     </head>
-    <body class="tw-flex tw-min-h-[100vh] tw-flex-col tw-items-center tw-justify-center tw-bg-[#f5f5f5] tw-font-mono tw-text-black">
-
-        <header class="tw-absolute tw-top-0 tw-z-20 tw-flex tw-h-[60px] tw-w-full tw-justify-between tw-px-[5%] tw-py-4">
-             <a class="tw-text-2xl tw-font-medium" href="index.html">Marco</a>
-             <a href="index.html" class="tw-text-sm tw-text-gray-500 hover:tw-text-black">
+    <body
+        class="tw-flex tw-min-h-[100vh] tw-flex-col tw-items-center tw-justify-center tw-bg-[#f5f5f5] tw-font-mono tw-text-black"
+    >
+        <header
+            class="tw-absolute tw-top-0 tw-z-20 tw-flex tw-h-[60px] tw-w-full tw-justify-between tw-px-[5%] tw-py-4"
+        >
+            <a class="tw-text-2xl tw-font-medium" href="index.html">Marco</a>
+            <a href="index.html" class="tw-text-sm tw-text-gray-500 hover:tw-text-black">
                 <i class="bi bi-arrow-left"></i> Back
             </a>
         </header>
@@ -32,17 +41,23 @@
             <div class="controls">
                 <label class="file-upload-btn">
                     <i class="bi bi-upload"></i> Upload Photo
-                    <input type="file" id="imageInput" accept="image/*">
+                    <input type="file" id="imageInput" accept="image/*" />
                 </label>
 
                 <div class="control-group">
                     <i class="bi bi-zoom-out"></i>
-                    <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1">
+                    <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1" />
                     <i class="bi bi-zoom-in"></i>
                 </div>
 
                 <div class="input-with-settings">
-                    <input type="text" id="textInput" placeholder="#MERRYCHRISTMAS" value="#MERRYCHRISTMAS" maxlength="25">
+                    <input
+                        type="text"
+                        id="textInput"
+                        placeholder="#MERRYCHRISTMAS"
+                        value="#MERRYCHRISTMAS"
+                        maxlength="25"
+                    />
                     <button id="openColorModalBtn" class="settings-btn" title="Customize Colors">
                         <i class="bi bi-palette-fill"></i>
                     </button>
@@ -50,7 +65,9 @@
 
                 <div>
                     <button id="downloadBtn">Download PNG</button>
-                    <p class="tw-text-gray-400 tw-mt-2" style="font-size: 10px; margin-bottom: 0;">No images will be retained.</p>
+                    <p class="tw-text-gray-400 tw-mt-2" style="font-size: 10px; margin-bottom: 0">
+                        No images will be retained.
+                    </p>
                 </div>
             </div>
         </div>
@@ -59,26 +76,29 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h2>Customize Colors</h2>
-                    <button id="closeModalBtn" class="close-modal-btn"><i class="bi bi-x-lg"></i></button>
+                    <button id="closeModalBtn" class="close-modal-btn">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
                 </div>
 
                 <div class="modal-body">
                     <div class="setting-section">
                         <label>Text Color</label>
                         <div class="color-picker-row" id="textColorRow">
-                            <input type="color" id="textColorPicker" value="#ffffff">
+                            <input type="color" id="textColorPicker" value="#ffffff" />
                             <span id="textColorLabel" class="color-label-text">#FFFFFF</span>
                         </div>
                     </div>
 
-                    <hr class="tw-my-4 tw-border-gray-200">
+                    <hr class="tw-my-4 tw-border-gray-200" />
 
                     <div class="setting-section">
                         <label>Ribbon Gradient Colors</label>
-                        <p class="tw-mb-2 tw-text-xs tw-text-gray-500">Add multiple colors to create a gradient.</p>
+                        <p class="tw-mb-2 tw-text-xs tw-text-gray-500">
+                            Add multiple colors to create a gradient.
+                        </p>
 
-                        <div id="ribbonColorsList" class="tw-flex tw-flex-col tw-gap-2">
-                            </div>
+                        <div id="ribbonColorsList" class="tw-flex tw-flex-col tw-gap-2"></div>
 
                         <button id="addRibbonColorBtn" class="add-color-btn tw-mt-3">
                             <i class="bi bi-plus-circle"></i> Add Color

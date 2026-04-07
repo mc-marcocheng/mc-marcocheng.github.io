@@ -58,6 +58,210 @@ body {
     }
 }
 
+/* --- Collapsible Header Styles --- */
+.header-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 1;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.header-toggle:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.header-toggle:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Collapsed header state */
+.border-b.collapsed {
+    padding-bottom: 1rem !important;
+    transition: padding 0.3s ease;
+}
+
+/* Hide elements when collapsed */
+.border-b.collapsed .space-y-3,
+.border-b.collapsed #filter-container {
+    display: none !important;
+}
+
+/* Smooth transitions for collapsing */
+.border-b .space-y-3,
+.border-b #filter-container {
+    transition: opacity 0.2s ease;
+}
+
+/* Short screen optimizations for DESKTOP (wide but short) */
+@media (max-height: 600px) and (min-width: 768px) {
+    #search-aside .border-b:not(.collapsed) {
+        padding: 1rem !important;
+    }
+
+    #search-aside h1 {
+        font-size: 1.25rem !important;
+        margin-bottom: 0.75rem !important;
+        display: flex;
+        align-items: center;
+    }
+
+    #search-aside .space-y-3 {
+        gap: 0.5rem !important;
+    }
+
+    #filter-container {
+        margin-top: 0.5rem !important;
+    }
+
+    #park-list {
+        min-height: 200px;
+    }
+
+    #btn-geolocate,
+    #btn-drop-pin {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    #search-input {
+        padding: 0.5rem 1rem !important;
+    }
+}
+
+/* Short screen optimizations for MOBILE (narrow and short) */
+@media (max-height: 600px) and (max-width: 767px) {
+    #search-aside .border-b:not(.collapsed) {
+        padding: 1rem !important;
+    }
+
+    #search-aside h1 {
+        font-size: 1.25rem !important;
+        margin-bottom: 0.5rem !important;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #search-aside .space-y-3 {
+        gap: 0.5rem !important;
+    }
+
+    #filter-container {
+        margin-top: 0.5rem !important;
+    }
+
+    /* More aggressive space saving for mobile */
+    #btn-geolocate,
+    #btn -drop-pin {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    #search-input {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.875rem !important;
+    }
+
+    /* Smaller toggle button for mobile */
+    .header-toggle {
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
+    }
+
+    /* Ensure adequate space for park list on mobile landscape */
+    #park-list {
+        min-height: 150px;
+    }
+}
+
+/* For very short screens - even more aggressive space saving */
+@media (max-height: 480px) {
+    #search-aside .border-b:not(.collapsed) {
+        padding: 0.75rem !important;
+    }
+
+    #search-aside h1 {
+        font-size: 1.125rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .header-toggle {
+        width: 16px;
+        height: 16px;
+        font-size: 8px;
+    }
+
+    /* Very compact buttons for very short screens */
+    #btn-geolocate,
+    #btn-drop-pin {
+        padding: 0.375rem 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    #search-input {
+        padding: 0.375rem 0.5rem !important;
+    }
+
+    /* Minimal spacing */
+    #search-aside .space-y-3 {
+        gap: 0.375rem !important;
+    }
+
+    #filter-container {
+        margin-top: 0.375rem !important;
+    }
+}
+
+/* Collapsed state adjustments for mobile */
+@media (max-width: 767px) {
+    .border-b.collapsed {
+        padding: 0.75rem 1rem !important;
+    }
+}
+
+/* Collapsible filter container */
+.show-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    margin-left: 4px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.show-more-btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.show-more-btn:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+#filter-container.collapsed {
+    max-height: 40px; /* Approx. 2 lines, adjust as needed */
+    overflow: hidden;
+}
+
 /* --- UI Elements & Animations --- */
 .filter-pill {
     padding: 6px 14px;

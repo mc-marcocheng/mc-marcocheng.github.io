@@ -6,7 +6,7 @@ export const works = [
         description: `• Made multi-agent systems to automate trade-execution document auditing and client requests.<br>
 • Integrated AI agents communication protocols (MCP, A2A) and OAuth to ensure compliant data exchange.<br>
 • Built AI Copilot to intelligently populate and modify forms based on historical data.`,
-        roundedImage: false
+        roundedImage: false,
     },
     {
         company: "Risksis",
@@ -16,7 +16,7 @@ export const works = [
 • Vision LLM few-show learning with learnable category embeddings, trained with GRPO.<br>
 • SOTA infrared multi-modal object detection.<br>
 • 4x faster LLM inference with my template speculative decoding technique.`,
-        roundedImage: false
+        roundedImage: false,
     },
     {
         company: "Set Sail",
@@ -26,7 +26,7 @@ export const works = [
 • Chatbot solutions for e-commerce, knowledge retrieval, education, code generation.<br>
 • MTR virtual service ambassador for enquiry service to passengers.<br>
 • Developed Cantonese text-to-speech voice models.`,
-        roundedImage: false
+        roundedImage: false,
     },
     {
         company: "Pantheon Lab",
@@ -35,7 +35,7 @@ export const works = [
         description: `• Face swap, face enhancement algorithms.<br>
 • LAB color space background removal.<br>
 • Image diffusion LORA training. Data pipeline engineering.`,
-        roundedImage: false
+        roundedImage: false,
     },
     {
         company: "CUHK",
@@ -43,6 +43,6 @@ export const works = [
         image: "./assets/images/work/cuhk.png",
         description: `• Conducted research on the Modified Hegselmann-Krause (MHK) model.<br>
 • Identified opinion dynamics in social networks.`,
-        roundedImage: false
-    }
+        roundedImage: false,
+    },
 ];

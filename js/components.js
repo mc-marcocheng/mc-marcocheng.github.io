@@ -21,7 +21,7 @@ export function createHobbyCard(hobby) {
 }
 
 export function createWorkCard(work) {
-    const roundedClass = work.roundedImage ? 'tw-rounded-full' : '';
+    const roundedClass = work.roundedImage ? "tw-rounded-full" : "";
     return `
     <div class="tw-flex tw-h-fit tw-w-full tw-flex-col tw-gap-4 tw-border-2 tw-border-black tw-bg-white tw-p-4">
         <div class="tw-flex tw-w-full tw-place-items-center tw-gap-4 tw-p-2">

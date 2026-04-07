@@ -1,20 +1,20 @@
-const imageInput = document.getElementById('imageInput');
-const downloadBtn = document.getElementById('downloadBtn');
-const zoomSlider = document.getElementById('zoomSlider');
-const textInput = document.getElementById('textInput');
-const fileUploadBtnLabel = document.querySelector('.file-upload-btn');
+const imageInput = document.getElementById("imageInput");
+const downloadBtn = document.getElementById("downloadBtn");
+const zoomSlider = document.getElementById("zoomSlider");
+const textInput = document.getElementById("textInput");
+const fileUploadBtnLabel = document.querySelector(".file-upload-btn");
 
 // Modal Elements
-const openColorModalBtn = document.getElementById('openColorModalBtn');
-const closeModalBtn = document.getElementById('closeModalBtn');
-const applyModalBtn = document.getElementById('applyModalBtn');
-const undoModalBtn = document.getElementById('undoModalBtn');
-const colorModal = document.getElementById('colorModal');
-const textColorPicker = document.getElementById('textColorPicker');
-const textColorLabel = document.getElementById('textColorLabel');
-const textColorRow = document.getElementById('textColorRow');
-const ribbonColorsList = document.getElementById('ribbonColorsList');
-const addRibbonColorBtn = document.getElementById('addRibbonColorBtn');
+const openColorModalBtn = document.getElementById("openColorModalBtn");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const applyModalBtn = document.getElementById("applyModalBtn");
+const undoModalBtn = document.getElementById("undoModalBtn");
+const colorModal = document.getElementById("colorModal");
+const textColorPicker = document.getElementById("textColorPicker");
+const textColorLabel = document.getElementById("textColorLabel");
+const textColorRow = document.getElementById("textColorRow");
+const ribbonColorsList = document.getElementById("ribbonColorsList");
+const addRibbonColorBtn = document.getElementById("addRibbonColorBtn");
 
 // Variables
 let userImg = null;
@@ -24,17 +24,17 @@ let isDragging = false;
 let startX, startY;
 
 // Default Colors
-let ribbonColors = ['#d42426', '#2a9d8f']; // Red, Teal
-let currentTextColor = '#ffffff';
-let currentHoverBg = '#fff0f0';
+let ribbonColors = ["#d42426", "#2a9d8f"]; // Red, Teal
+let currentTextColor = "#ffffff";
+let currentHoverBg = "#fff0f0";
 
 // History
-let historyStack = [];
+const historyStack = [];
 
 function saveState() {
     const state = {
         ribbonColors: [...ribbonColors],
-        textColor: currentTextColor
+        textColor: currentTextColor,
     };
     historyStack.push(state);
     updateUndoBtnUI();
@@ -54,7 +54,7 @@ function restoreState() {
     textColorLabel.textContent = currentTextColor.toUpperCase();
 
     // Trigger global refresh
-    if(window.refreshFrameMakerUI) {
+    if (window.refreshFrameMakerUI) {
         window.refreshFrameMakerUI();
     }
 
@@ -65,130 +65,129 @@ function updateUndoBtnUI() {
     undoModalBtn.disabled = historyStack.length === 0;
 }
 
-undoModalBtn.addEventListener('click', restoreState);
+undoModalBtn.addEventListener("click", restoreState);
 
 // Modal
 function toggleModal(show) {
     if (show) {
         updateUndoBtnUI();
 
-        colorModal.classList.remove('tw-hidden');
-        setTimeout(() => colorModal.classList.add('open'), 10);
+        colorModal.classList.remove("tw-hidden");
+        setTimeout(() => colorModal.classList.add("open"), 10);
     } else {
-        colorModal.classList.remove('open');
-        setTimeout(() => colorModal.classList.add('tw-hidden'), 200);
+        colorModal.classList.remove("open");
+        setTimeout(() => colorModal.classList.add("tw-hidden"), 200);
     }
 }
 
-openColorModalBtn.addEventListener('click', () => toggleModal(true));
-closeModalBtn.addEventListener('click', () => toggleModal(false));
-applyModalBtn.addEventListener('click', () => toggleModal(false));
+openColorModalBtn.addEventListener("click", () => toggleModal(true));
+closeModalBtn.addEventListener("click", () => toggleModal(false));
+applyModalBtn.addEventListener("click", () => toggleModal(false));
 
-textColorRow.addEventListener('click', (e) => {
-    if(e.target !== textColorPicker) {
+textColorRow.addEventListener("click", (e) => {
+    if (e.target !== textColorPicker) {
         textColorPicker.click();
     }
 });
 
-textColorPicker.addEventListener('click', () => {
+textColorPicker.addEventListener("click", () => {
     saveState();
 });
 
-textColorPicker.addEventListener('input', (e) => {
+textColorPicker.addEventListener("input", (e) => {
     currentTextColor = e.target.value;
     textColorLabel.textContent = currentTextColor.toUpperCase();
-    if(window.redrawFrameMaker) window.redrawFrameMaker();
+    if (window.redrawFrameMaker) window.redrawFrameMaker();
 });
 
-
-let sketch = function(p) {
-
-    window.refreshFrameMakerUI = function() {
+const sketch = function (p) {
+    window.refreshFrameMakerUI = function () {
         renderRibbonInputs();
         updateUITheme();
         p.redraw();
     };
 
-    window.redrawFrameMaker = function() {
+    window.redrawFrameMaker = function () {
         p.redraw();
-    }
+    };
 
     function updateUITheme() {
         if (ribbonColors.length === 0) return;
 
         // Download Button Gradient
-        let gradientColors = ribbonColors.length === 1
-            ? `${ribbonColors[0]}, ${ribbonColors[0]}`
-            : ribbonColors.join(', ');
+        const gradientColors =
+            ribbonColors.length === 1
+                ? `${ribbonColors[0]}, ${ribbonColors[0]}`
+                : ribbonColors.join(", ");
 
-        if(downloadBtn) {
+        if (downloadBtn) {
             downloadBtn.style.background = `linear-gradient(45deg, ${gradientColors})`;
         }
 
         // UI Accents
         const primaryColorStr = ribbonColors[0];
 
-        if(fileUploadBtnLabel) {
+        if (fileUploadBtnLabel) {
             fileUploadBtnLabel.style.borderColor = primaryColorStr;
             fileUploadBtnLabel.style.color = primaryColorStr;
         }
-        if(zoomSlider) {
+        if (zoomSlider) {
             zoomSlider.style.accentColor = primaryColorStr;
         }
 
-        if(textInput) {
-            textInput.style.setProperty('--active-border-color', primaryColorStr);
-            textInput.style.borderColor = '';
+        if (textInput) {
+            textInput.style.setProperty("--active-border-color", primaryColorStr);
+            textInput.style.borderColor = "";
         }
 
         // Calculate Hover Background
         try {
             const primaryColor = p.color(primaryColorStr);
-            let white = p.color(255);
-            let lightTint = p.lerpColor(primaryColor, white, 0.92);
-            currentHoverBg = `rgba(${lightTint.levels[0]}, ${lightTint.levels[1]}, ${lightTint.levels[2]}, ${lightTint.levels[3]/255})`;
+            const white = p.color(255);
+            const lightTint = p.lerpColor(primaryColor, white, 0.92);
+            currentHoverBg = `rgba(${lightTint.levels[0]}, ${lightTint.levels[1]}, ${lightTint.levels[2]}, ${lightTint.levels[3] / 255})`;
         } catch (e) {
-            currentHoverBg = '#f0f0f0';
+            currentHoverBg = "#f0f0f0";
         }
     }
 
-    if(fileUploadBtnLabel) {
-        fileUploadBtnLabel.addEventListener('mouseenter', () => {
+    if (fileUploadBtnLabel) {
+        fileUploadBtnLabel.addEventListener("mouseenter", () => {
             fileUploadBtnLabel.style.backgroundColor = currentHoverBg;
         });
-        fileUploadBtnLabel.addEventListener('mouseleave', () => {
-            fileUploadBtnLabel.style.backgroundColor = 'transparent';
+        fileUploadBtnLabel.addEventListener("mouseleave", () => {
+            fileUploadBtnLabel.style.backgroundColor = "transparent";
         });
     }
 
-    p.setup = function() {
+    p.setup = function () {
         p.pixelDensity(2);
-        let p5canvas = p.createCanvas(400, 400);
-        p5canvas.parent('avatarCanvasContainer');
-        p.textFont('Montserrat');
+        const p5canvas = p.createCanvas(400, 400);
+        p5canvas.parent("avatarCanvasContainer");
+        p.textFont("Montserrat");
 
-        imageInput.addEventListener('change', handleFile);
-        zoomSlider.addEventListener('input', () => p.redraw());
-        textInput.addEventListener('input', () => p.redraw());
-        downloadBtn.addEventListener('click', downloadAvatar);
+        imageInput.addEventListener("change", handleFile);
+        zoomSlider.addEventListener("input", () => p.redraw());
+        textInput.addEventListener("input", () => p.redraw());
+        downloadBtn.addEventListener("click", downloadAvatar);
 
-        addRibbonColorBtn.addEventListener('click', () => {
+        addRibbonColorBtn.addEventListener("click", () => {
             saveState(); // Save before adding
-            const lastColor = ribbonColors[ribbonColors.length - 1] || '#000000';
+            const lastColor = ribbonColors[ribbonColors.length - 1] || "#000000";
             ribbonColors.push(lastColor);
             renderRibbonInputs();
             updateUITheme();
             p.redraw();
         });
 
-        p5canvas.elt.addEventListener('mousedown', startDrag);
-        p5canvas.elt.addEventListener('touchstart', startDrag, {passive: false});
+        p5canvas.elt.addEventListener("mousedown", startDrag);
+        p5canvas.elt.addEventListener("touchstart", startDrag, { passive: false });
 
-        window.addEventListener('mousemove', drag);
-        window.addEventListener('touchmove', drag, {passive: false});
+        window.addEventListener("mousemove", drag);
+        window.addEventListener("touchmove", drag, { passive: false });
 
-        window.addEventListener('mouseup', endDrag);
-        window.addEventListener('touchend', endDrag);
+        window.addEventListener("mouseup", endDrag);
+        window.addEventListener("touchend", endDrag);
 
         p5canvas.mouseWheel(handleScrollZoom);
 
@@ -198,21 +197,21 @@ let sketch = function(p) {
         p.noLoop();
     };
 
-    p.draw = function() {
+    p.draw = function () {
         p.clear();
         p.background(255, 0);
 
         // Draw Image
         p.push();
-        let ctx = p.drawingContext;
+        const ctx = p.drawingContext;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(p.width/2, p.height/2, p.width/2, 0, Math.PI * 2);
+        ctx.arc(p.width / 2, p.height / 2, p.width / 2, 0, Math.PI * 2);
         ctx.clip();
 
         if (userImg) {
-            let zoom = parseFloat(zoomSlider.value);
-            let aspect = userImg.width / userImg.height;
+            const zoom = parseFloat(zoomSlider.value);
+            const aspect = userImg.width / userImg.height;
             let drawWidth, drawHeight;
 
             if (aspect > 1) {
@@ -224,7 +223,7 @@ let sketch = function(p) {
             }
 
             p.imageMode(p.CENTER);
-            p.image(userImg, (p.width/2) + imgX, (p.height/2) + imgY, drawWidth, drawHeight);
+            p.image(userImg, p.width / 2 + imgX, p.height / 2 + imgY, drawWidth, drawHeight);
         } else {
             drawPlaceholder(p);
         }
@@ -232,37 +231,37 @@ let sketch = function(p) {
         p.pop();
 
         // Arc Logic
-        let defaultStart = 160;
-        let defaultEnd = 300;
-        let centerDeg = (defaultStart + defaultEnd) / 2;
+        const defaultStart = 160;
+        const defaultEnd = 300;
+        const centerDeg = (defaultStart + defaultEnd) / 2;
 
-        let msg = textInput.value || " ";
-        let reversedMsg = msg.split('').reverse().join('').toUpperCase();
+        const msg = textInput.value || " ";
+        const reversedMsg = msg.split("").reverse().join("").toUpperCase();
 
         p.textSize(p.width * 0.075);
         p.textStyle(p.BOLD);
 
-        let weight = p.width * 0.14;
-        let r = (p.width / 2) - (weight / 2);
+        const weight = p.width * 0.14;
+        const r = p.width / 2 - weight / 2;
 
-        let charSpacingAngle = p.radians(1.0);
+        const charSpacingAngle = p.radians(1.0);
         let totalTextAngle = 0;
 
         for (let i = 0; i < reversedMsg.length; i++) {
-            let w = p.textWidth(reversedMsg.charAt(i));
-            totalTextAngle += (w / r) + (i > 0 ? charSpacingAngle : 0);
+            const w = p.textWidth(reversedMsg.charAt(i));
+            totalTextAngle += w / r + (i > 0 ? charSpacingAngle : 0);
         }
 
-        let textSpanDeg = p.degrees(totalTextAngle);
-        let paddingDeg = 25;
-        let requiredSpan = textSpanDeg + paddingDeg;
-        let defaultSpan = defaultEnd - defaultStart;
+        const textSpanDeg = p.degrees(totalTextAngle);
+        const paddingDeg = 25;
+        const requiredSpan = textSpanDeg + paddingDeg;
+        const defaultSpan = defaultEnd - defaultStart;
 
         let finalStart = defaultStart;
         let finalEnd = defaultEnd;
 
         if (requiredSpan > defaultSpan) {
-            let halfSpan = requiredSpan / 2;
+            const halfSpan = requiredSpan / 2;
             finalStart = centerDeg - halfSpan;
             finalEnd = centerDeg + halfSpan;
         }
@@ -272,39 +271,39 @@ let sketch = function(p) {
     };
 
     function renderRibbonInputs() {
-        ribbonColorsList.innerHTML = '';
+        ribbonColorsList.innerHTML = "";
 
         ribbonColors.forEach((color, index) => {
-            const row = document.createElement('div');
-            row.className = 'color-picker-row';
+            const row = document.createElement("div");
+            row.className = "color-picker-row";
 
-            const input = document.createElement('input');
-            input.type = 'color';
+            const input = document.createElement("input");
+            input.type = "color";
             input.value = color;
 
-            input.addEventListener('click', () => {
-               saveState();
+            input.addEventListener("click", () => {
+                saveState();
             });
 
-            input.addEventListener('input', (e) => {
+            input.addEventListener("input", (e) => {
                 ribbonColors[index] = e.target.value;
                 label.textContent = e.target.value.toUpperCase();
                 updateUITheme();
                 p.redraw();
             });
 
-            const label = document.createElement('span');
-            label.className = 'color-label-text';
+            const label = document.createElement("span");
+            label.className = "color-label-text";
             label.textContent = color.toUpperCase();
 
-            const delBtn = document.createElement('button');
-            delBtn.className = 'remove-color-btn';
+            const delBtn = document.createElement("button");
+            delBtn.className = "remove-color-btn";
             delBtn.innerHTML = '<i class="bi bi-trash"></i>';
             if (ribbonColors.length <= 1) {
-                delBtn.style.display = 'none';
+                delBtn.style.display = "none";
             }
 
-            delBtn.addEventListener('click', (e) => {
+            delBtn.addEventListener("click", (e) => {
                 e.stopPropagation();
                 saveState();
                 ribbonColors.splice(index, 1);
@@ -313,7 +312,7 @@ let sketch = function(p) {
                 p.redraw();
             });
 
-            row.addEventListener('click', (e) => {
+            row.addEventListener("click", (e) => {
                 if (e.target !== input && e.target !== delBtn && !delBtn.contains(e.target)) {
                     input.click();
                 }
@@ -329,16 +328,16 @@ let sketch = function(p) {
     function startDrag(e) {
         if (!userImg) return;
         isDragging = true;
-        let clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         startX = clientX - imgX;
         startY = clientY - imgY;
     }
 
     function drag(e) {
         if (!isDragging || !userImg) return;
-        let clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         imgX = clientX - startX;
         imgY = clientY - startY;
         p.redraw();
@@ -350,8 +349,8 @@ let sketch = function(p) {
 
     function handleScrollZoom(event) {
         if (!userImg) return false;
-        let zoomStep = 0.1;
-        let currentZoom = parseFloat(zoomSlider.value);
+        const zoomStep = 0.1;
+        const currentZoom = parseFloat(zoomSlider.value);
         if (event.deltaY > 0) {
             zoomSlider.value = Math.max(parseFloat(zoomSlider.min), currentZoom - zoomStep);
         } else {
@@ -363,7 +362,7 @@ let sketch = function(p) {
 
     function handleFile(e) {
         const file = e.target.files[0];
-        if (file && file.type.startsWith('image')) {
+        if (file && file.type.startsWith("image")) {
             const url = URL.createObjectURL(file);
             p.loadImage(url, (img) => {
                 userImg = img;
@@ -382,47 +381,47 @@ let sketch = function(p) {
         p.noStroke();
         p.textAlign(p.CENTER, p.CENTER);
         p.textSize(16);
-        p.text("No Image Selected", p.width/2, p.height/2);
+        p.text("No Image Selected", p.width / 2, p.height / 2);
     }
 
     function drawMultiColorGradientArc(p, startDeg, endDeg) {
         if (ribbonColors.length === 0) return;
 
-        let colorsToDraw = [...ribbonColors].reverse();
+        const colorsToDraw = [...ribbonColors].reverse();
 
         p.push();
         p.noFill();
         p.strokeCap(p.ROUND);
 
-        let weight = p.width * 0.14;
+        const weight = p.width * 0.14;
         p.strokeWeight(weight);
 
-        let ctx = p.drawingContext;
-        let startRad = p.radians(startDeg - 90);
-        let grad = ctx.createConicGradient(startRad, p.width/2, p.height/2);
+        const ctx = p.drawingContext;
+        const startRad = p.radians(startDeg - 90);
+        const grad = ctx.createConicGradient(startRad, p.width / 2, p.height / 2);
 
-        let spanDeg = endDeg - startDeg;
-        let spanRatio = spanDeg / 360.0;
+        const spanDeg = endDeg - startDeg;
+        const spanRatio = spanDeg / 360.0;
 
-        let fadePct = 0.1;
+        const fadePct = 0.1;
 
-        grad.addColorStop(0, 'rgba(0,0,0,0)');
+        grad.addColorStop(0, "rgba(0,0,0,0)");
 
-        let firstColor = p.color(colorsToDraw[0]);
-        let firstColorTransparent = p.color(colorsToDraw[0]);
+        const firstColor = p.color(colorsToDraw[0]);
+        const firstColorTransparent = p.color(colorsToDraw[0]);
         firstColorTransparent.setAlpha(0);
 
         grad.addColorStop(0, firstColorTransparent.toString());
         grad.addColorStop(fadePct * spanRatio, firstColor.toString());
 
-        let activeStart = fadePct * spanRatio;
-        let activeEnd = (1 - fadePct) * spanRatio;
-        let activeSpan = activeEnd - activeStart;
+        const activeStart = fadePct * spanRatio;
+        const activeEnd = (1 - fadePct) * spanRatio;
+        const activeSpan = activeEnd - activeStart;
 
         if (colorsToDraw.length > 1) {
             for (let i = 0; i < colorsToDraw.length; i++) {
-                let relativePos = i / (colorsToDraw.length - 1);
-                let actualPos = activeStart + (relativePos * activeSpan);
+                const relativePos = i / (colorsToDraw.length - 1);
+                const actualPos = activeStart + relativePos * activeSpan;
                 grad.addColorStop(actualPos, colorsToDraw[i]);
             }
         } else {
@@ -430,18 +429,25 @@ let sketch = function(p) {
             grad.addColorStop(activeEnd, colorsToDraw[0]);
         }
 
-        let lastColor = p.color(colorsToDraw[colorsToDraw.length - 1]);
-        let lastColorTransparent = p.color(colorsToDraw[colorsToDraw.length - 1]);
+        const lastColor = p.color(colorsToDraw[colorsToDraw.length - 1]);
+        const lastColorTransparent = p.color(colorsToDraw[colorsToDraw.length - 1]);
         lastColorTransparent.setAlpha(0);
 
         grad.addColorStop((1 - fadePct) * spanRatio, lastColor.toString());
         grad.addColorStop(spanRatio, lastColorTransparent.toString());
-        grad.addColorStop(spanRatio + 0.001, 'rgba(0,0,0,0)');
+        grad.addColorStop(spanRatio + 0.001, "rgba(0,0,0,0)");
 
         ctx.strokeStyle = grad;
 
-        let diameter = p.width - weight;
-        p.arc(p.width/2, p.height/2, diameter, diameter, p.radians(startDeg - 90), p.radians(endDeg - 90));
+        const diameter = p.width - weight;
+        p.arc(
+            p.width / 2,
+            p.height / 2,
+            diameter,
+            diameter,
+            p.radians(startDeg - 90),
+            p.radians(endDeg - 90)
+        );
         p.pop();
     }
 
@@ -455,29 +461,29 @@ let sketch = function(p) {
         p.fill(currentTextColor);
         p.noStroke();
 
-        let weight = p.width * 0.14;
-        let r = (p.width / 2) - (weight / 2);
+        const weight = p.width * 0.14;
+        const r = p.width / 2 - weight / 2;
 
         let totalTextAngle = 0;
         for (let i = 0; i < message.length; i++) {
-            let w = p.textWidth(message.charAt(i));
-            totalTextAngle += (w / r) + (i > 0 ? charSpacingAngle : 0);
+            const w = p.textWidth(message.charAt(i));
+            totalTextAngle += w / r + (i > 0 ? charSpacingAngle : 0);
         }
 
-        let centerAngle = p.radians((startDeg + endDeg) / 2);
-        let currentAngle = centerAngle - (totalTextAngle / 2);
+        const centerAngle = p.radians((startDeg + endDeg) / 2);
+        let currentAngle = centerAngle - totalTextAngle / 2;
 
-        let verticalNudge = -p.textSize() * 0.1;
+        const verticalNudge = -p.textSize() * 0.1;
 
         for (let i = 0; i < message.length; i++) {
-            let char = message.charAt(i);
-            let charW = p.textWidth(char);
-            let charAngle = charW / r;
+            const char = message.charAt(i);
+            const charW = p.textWidth(char);
+            const charAngle = charW / r;
 
-            let theta = currentAngle + (charAngle / 2);
+            const theta = currentAngle + charAngle / 2;
 
             p.push();
-            p.translate(p.width/2, p.height/2);
+            p.translate(p.width / 2, p.height / 2);
             p.rotate(theta);
             p.translate(0, -r);
             p.rotate(p.PI);
@@ -490,8 +496,8 @@ let sketch = function(p) {
     }
 
     function downloadAvatar() {
-        let fileName = textInput.value.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-        p.saveCanvas(fileName || 'marco-frame', 'png');
+        const fileName = textInput.value.replace(/[^a-z0-9]/gi, "_").toLowerCase();
+        p.saveCanvas(fileName || "marco-frame", "png");
     }
 };
 
