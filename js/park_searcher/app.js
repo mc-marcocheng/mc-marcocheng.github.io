@@ -292,7 +292,7 @@ function setupFilterCollapse() {
         // Add toggle button OUTSIDE the collapsed container, to the right
         const btn = document.createElement("button");
         btn.className = "show-more-btn";
-        btn.title = "顯示更多/收合篩選器材";
+        btn.title = "顯示更多";
         btn.innerHTML = `
             <svg class="icon-chevron" style="transition:transform 0.2s;" width="18" height="18" viewBox
             ="0 0 20 20" fill="none">
@@ -302,9 +302,11 @@ function setupFilterCollapse() {
         btn.onclick = () => {
             if (container.classList.contains("collapsed")) {
                 container.classList.remove("collapsed");
+                btn.title = "收合篩選器材";
                 btn.querySelector(".icon-chevron").style.transform = "rotate(180deg)";
             } else {
                 container.classList.add("collapsed");
+                btn.title = "顯示更多";
                 btn.querySelector(".icon-chevron").style.transform = "rotate(0deg)";
             }
         };
