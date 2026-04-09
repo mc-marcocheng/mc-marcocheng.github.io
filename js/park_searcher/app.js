@@ -352,6 +352,7 @@ function updateView() {
     renderScrollFooter(currentFilteredData.length, displayedItems.length, isLoadingMore);
     renderMarkers(currentFilteredData);
     setupInfiniteScroll();
+    fillVisibleArea();
 }
 
 /**
@@ -391,6 +392,23 @@ function handleScroll() {
 }
 
 /**
+ * Keeps loading batches until the list is scrollable or all items are shown
+ */
+function fillVisibleArea() {
+    const container = document.getElementById("park-list");
+    // Use requestAnimationFrame to ensure DOM has been painted
+    requestAnimationFrame(() => {
+        if (
+            !isLoadingMore &&
+            displayedItems.length < currentFilteredData.length &&
+            container.scrollHeight <= container.clientHeight
+        ) {
+            loadMoreItems();
+        }
+    });
+}
+
+/**
  * Loads more items into the list
  */
 function loadMoreItems() {
@@ -408,6 +426,7 @@ function loadMoreItems() {
         setTimeout(() => {
             isLoadingMore = false;
             renderScrollFooter(currentFilteredData.length, displayedItems.length, isLoadingMore);
+            fillVisibleArea();
         }, 300); // Simulate loading delay for better UX
     } else {
         isLoadingMore = false;
