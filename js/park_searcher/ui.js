@@ -4,7 +4,7 @@ let currentImageIndex = 0;
 
 function buildImagePath(parkId, imgName) {
     if (imgName.startsWith("http")) return imgName;
-    return `assets/parks/${parkId}/${imgName}`;
+    return `/assets/images/parks/${parkId}/${imgName}`;
 }
 
 function renderList(parks, newlyAdded = []) {
