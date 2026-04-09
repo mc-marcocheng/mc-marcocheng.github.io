@@ -67,8 +67,8 @@
             "zh": "蒲魯賢徑遊樂場"
         },
         "coords": {
-            "lat": 22.455278,
-            "lng": 114.199444
+            "lat": 22.274668661265956,
+            "lng": 114.15626723799944
         },
         "district": {
             "en": "Central & Western",
@@ -78,9 +78,17 @@
             "en": "Brewin Path, Mid Levels",
             "zh": "半山蒲魯賢徑"
         },
-        "equipment": [],
+        "equipment": [
+            {
+                "type": "others",
+                "images": ["other_1.jpg", "other_2.jpg", "other_3.jpg", "other_4.jpg"]
+            }
+        ],
         "park_images": [
-            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1459_1.jpg"
+            "overview_1.jpg",
+            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1459_1.jpg",
+            "overview_2.jpg",
+            "overview_3.jpg"
         ],
         "metrics": {
             "quality": null
