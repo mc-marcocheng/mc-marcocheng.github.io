@@ -2,9 +2,14 @@
 let currentModalImages = [];
 let currentImageIndex = 0;
 
-function buildImagePath(parkId, imgName) {
+function buildImagePath(parkId, imgName, size = "med") {
     if (imgName.startsWith("http")) return imgName;
-    return `/assets/images/parks/${parkId}/${imgName}`;
+    return `/assets/images/parks/${parkId}/${size}/${imgName}.webp`;
+}
+
+function placeholderImage(text = "No Image") {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect fill="#e2e8f0" width="400" height="300"/><text x="200" y="155" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="16">${text}</text></svg>`;
+    return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 function renderList(parks, newlyAdded = []) {
@@ -27,10 +32,10 @@ function renderList(parks, newlyAdded = []) {
 }
 
 function createParkCardHTML(p, animate = false) {
-    const imageSrc =
+    const thumbSrc =
         p.park_images && p.park_images.length > 0
-            ? buildImagePath(p.id, p.park_images[0])
-            : "https://via.placeholder.com/150?text=No+Image";
+            ? buildImagePath(p.id, p.park_images[0], "thumb")
+            : placeholderImage();
 
     const district =
         p.district && p.district.zh
@@ -44,7 +49,12 @@ function createParkCardHTML(p, animate = false) {
     return `
     <div class="park-card glass-panel${animateClass} flex cursor-pointer gap-4 rounded-2xl p-3 transition" onclick="openModal('${p.id}')">
         <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-200 shadow-sm">
-            <img src="${imageSrc}" class="h-full w-full object-cover">
+            <img src="${thumbSrc}"
+                 loading="lazy"
+                 decoding="async"
+                 width="80" height="80"
+                 alt="${p.name.zh || p.name.en}"
+                 class="h-full w-full object-cover">
         </div>
         <div class="flex-1 overflow-hidden flex flex-col justify-center">
             <h3 class="truncate text-base font-black text-slate-800">${p.name.zh || p.name.en}</h3>
@@ -101,18 +111,17 @@ function openModal(id) {
     // Build Gallery: Park Images First
     currentModalImages = [];
     if (p.park_images)
-        p.park_images.forEach((img) => currentModalImages.push(buildImagePath(p.id, img)));
+        p.park_images.forEach((img) => currentModalImages.push(buildImagePath(p.id, img, "med")));
     if (p.equipment) {
         p.equipment.forEach((eq) => {
             if (eq.images)
                 eq.images.forEach((img) => {
-                    const path = buildImagePath(p.id, img);
+                    const path = buildImagePath(p.id, img, "med");
                     if (!currentModalImages.includes(path)) currentModalImages.push(path);
                 });
         });
     }
-    if (currentModalImages.length === 0)
-        currentModalImages.push("https://via.placeholder.com/800x600?text=No+Image");
+    if (currentModalImages.length === 0) currentModalImages.push(placeholderImage());
 
     currentImageIndex = 0;
 
@@ -126,7 +135,7 @@ function openModal(id) {
                       const zhName = getEquipmentName(e.type);
                       const firstImg =
                           e.images && e.images.length > 0
-                              ? buildImagePath(p.id, e.images[0])
+                              ? buildImagePath(p.id, e.images[0], "med")
                               : null;
                       const clickAction = firstImg ? `onclick="jumpToImage('${firstImg}')"` : "";
                       return `<button ${clickAction} class="rounded-xl border border-blue-200 bg-blue-50/80 px-3 py-2 text-sm font-extrabold text-blue-900 shadow-sm transition hover:bg-blue-100 text-left whitespace-nowrap">

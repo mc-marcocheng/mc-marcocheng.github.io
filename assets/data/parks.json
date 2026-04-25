@@ -81,14 +81,14 @@
         "equipment": [
             {
                 "type": "others",
-                "images": ["other_1.jpg", "other_2.jpg", "other_3.jpg", "other_4.jpg"]
+                "images": ["other_1", "other_2", "other_3", "other_4"]
             }
         ],
         "park_images": [
-            "overview_1.jpg",
+            "overview_1",
             "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1459_1.jpg",
-            "overview_2.jpg",
-            "overview_3.jpg"
+            "overview_2",
+            "overview_3"
         ],
         "metrics": {
             "quality": null
@@ -3843,18 +3843,18 @@
             {
                 "type": "others",
                 "images": [
-                    "other_1.jpg",
-                    "other_2.jpg",
-                    "other_3.jpg",
-                    "other_5.jpg",
-                    "other_6.jpg",
-                    "other_7.jpg",
-                    "other_8.jpg",
-                    "other_4.jpg"
+                    "other_1",
+                    "other_2",
+                    "other_3",
+                    "other_5",
+                    "other_6",
+                    "other_7",
+                    "other_8",
+                    "other_4"
                 ]
             }
         ],
-        "park_images": ["overview_1.jpg", "overview_2.jpg"],
+        "park_images": ["overview_1", "overview_2"],
         "metrics": {
             "quality": null
         },
@@ -4340,10 +4340,10 @@
         "equipment": [
             {
                 "type": "others",
-                "images": ["other_1.jpg", "other_2.png"]
+                "images": ["other_1", "other_2"]
             }
         ],
-        "park_images": ["other_1.jpg"],
+        "park_images": ["other_1"],
         "metrics": {
             "quality": null
         },
@@ -4370,14 +4370,14 @@
         "equipment": [
             {
                 "type": "low_bar",
-                "images": ["low_bar_1.png", "low_bar_2.jpg"]
+                "images": ["low_bar_1", "low_bar_2"]
             },
             {
                 "type": "others",
-                "images": ["other_1.jpg", "other_2.jpg"]
+                "images": ["other_1", "other_2"]
             }
         ],
-        "park_images": ["low_bar_1.png"],
+        "park_images": ["low_bar_1"],
         "metrics": {
             "quality": 5
         },
