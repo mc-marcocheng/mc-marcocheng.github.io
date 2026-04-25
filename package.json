@@ -10,7 +10,9 @@
         "lint": "eslint js/**/*.js",
         "lint:fix": "eslint js/**/*.js --fix",
         "format": "prettier --write \"**/*.{js,html,css,json}\"",
-        "prepare": "husky"
+        "prepare": "husky",
+        "images": "node scripts/optimize-images.mjs",
+        "images:clean": "node scripts/optimize-images.mjs --clean"
     },
     "keywords": [],
     "author": "McCheng",
@@ -22,6 +24,7 @@
         "husky": "^9.1.7",
         "lint-staged": "^16.4.0",
         "prettier": "^3.8.1",
+        "sharp": "^0.33.0",
         "tailwindcss": "^3.4.18"
     },
     "dependencies": {
