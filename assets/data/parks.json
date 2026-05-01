@@ -1929,7 +1929,7 @@
         "metrics": {
             "quality": null
         },
-        "comment": ""
+        "comment": "暫時停業"
     },
     {
         "id": "finger-hill-sitting-out-area-peng-chau",
@@ -2119,6 +2119,36 @@
             "quality": null
         },
         "comment": ""
+    },
+    {
+        "id": "pak-tai-temple-playground",
+        "name": {
+            "en": "Pak Tai Temple Playground",
+            "zh": "北帝廟遊樂場"
+        },
+        "coords": {
+            "lat": 22.2116416632335,
+            "lng": 114.02693599181733
+        },
+        "district": {
+            "en": "Islands",
+            "zh": "離島區"
+        },
+        "address": {
+            "en": "Pak She Praya Road, Cheung Chau",
+            "zh": "長洲北社海傍路"
+        },
+        "equipment": [
+            {
+                "type": "monkey_bars",
+                "images": ["monkey_bar_1"]
+            }
+        ],
+        "park_images": ["overview_1"],
+        "metrics": {
+            "quality": 4
+        },
+        "comment": "攀爬架枝槓係粗嘅"
     },
     {
         "id": "peng-chau-waterfront-playground",
@@ -8397,14 +8427,29 @@
             "en": "17 Cornwall Street, Kowloon Tong",
             "zh": "九龍塘歌和老街17號"
         },
-        "equipment": [],
-        "park_images": [
-            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1977_1.jpg"
+        "equipment": [
+            {
+                "type": "low_bar",
+                "images": ["low_bar_1"]
+            },
+            {
+                "type": "high_pull_up_bar",
+                "images": ["high_pull_up_bar_1"]
+            },
+            {
+                "type": "monkey_bars",
+                "images": ["monkey_bar_1"]
+            },
+            {
+                "type": "sit_up_bench",
+                "images": ["sit_up_bench_1"]
+            }
         ],
+        "park_images": ["overview_1"],
         "metrics": {
-            "quality": null
+            "quality": 4
         },
-        "comment": ""
+        "comment": "又一城LG2出去就係"
     },
     {
         "id": "fa-hui-park",
@@ -8424,14 +8469,24 @@
             "en": "Fa Hui Park, Boundary Street, Kowloon",
             "zh": "九龍界限街花墟公園"
         },
-        "equipment": [],
+        "equipment": [
+            {
+                "type": "monkey_bars",
+                "images": ["monkey_bar_1"]
+            },
+            {
+                "type": "others",
+                "images": ["other_1", "other_2", "other_3"]
+            }
+        ],
         "park_images": [
-            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1605_1.jpg"
+            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1605_1.jpg",
+            "overview_1"
         ],
         "metrics": {
-            "quality": null
+            "quality": 2
         },
-        "comment": ""
+        "comment": "攀爬架枝槓係幼嘅"
     },
     {
         "id": "lai-chi-kok-park",
@@ -8802,7 +8857,12 @@
             "en": "J/O Tai Hang Tung Road and Tong Yam Street, Tai Hang Tung Estate",
             "zh": "大坑東邨大坑東道與棠蔭街交界"
         },
-        "equipment": [],
+        "equipment": [
+            {
+                "type": "others",
+                "images": ["other_1", "other_2"]
+            }
+        ],
         "park_images": [
             "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1619_1.jpg"
         ],
@@ -8914,6 +8974,36 @@
         "park_images": [
             "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1623_1.jpg"
         ],
+        "metrics": {
+            "quality": null
+        },
+        "comment": ""
+    },
+    {
+        "id": "tung-yu-house-sitting-out-area",
+        "name": {
+            "en": "Tung Yu House Sitting-out Area",
+            "zh": "東裕樓休憩處"
+        },
+        "coords": {
+            "lat": 22.331307,
+            "lng": 114.170664
+        },
+        "district": {
+            "en": "Sham Shui Po",
+            "zh": "深水埗區"
+        },
+        "address": {
+            "en": "Tong Yam Street, Shek Kip Mei",
+            "zh": "石硤尾棠蔭街"
+        },
+        "equipment": [
+            {
+                "type": "others",
+                "images": ["other_1", "other_2"]
+            }
+        ],
+        "park_images": ["overview_1"],
         "metrics": {
             "quality": null
         },
@@ -12862,6 +12952,36 @@
         "comment": ""
     },
     {
+        "id": "sam-shing-estate-sitting-out-area",
+        "name": {
+            "en": "Sam Shing Estate Sitting-out Area",
+            "zh": "三聖邨休憩處"
+        },
+        "coords": {
+            "lat": 22.381332,
+            "lng": 113.977635
+        },
+        "district": {
+            "en": "Tuen Mun",
+            "zh": "屯門區"
+        },
+        "address": {
+            "en": "Sam Shing Street, Tuen Mun",
+            "zh": "屯門三聖街"
+        },
+        "equipment": [
+            {
+                "type": "others",
+                "images": ["overview_1"]
+            }
+        ],
+        "park_images": ["overview_1"],
+        "metrics": {
+            "quality": null
+        },
+        "comment": ""
+    },
+    {
         "id": "bowen-road-fitness-trail",
         "name": {
             "en": "Bowen Road Fitness Trail",
@@ -14526,10 +14646,17 @@
             "en": "Junction of Sai Yee Street and Flower Market Street, Prince Edward, Mong Kok",
             "zh": "旺角太子洗衣街及花墟道交界"
         },
-        "equipment": [],
-        "park_images": [
-            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1665_1.jpg"
+        "equipment": [
+            {
+                "type": "monkey_bars",
+                "images": ["monkey_bar_1"]
+            },
+            {
+                "type": "others",
+                "images": ["other_1"]
+            }
         ],
+        "park_images": ["overview_1"],
         "metrics": {
             "quality": null
         },
