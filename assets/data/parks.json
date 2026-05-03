@@ -15101,8 +15101,8 @@
             "zh": "鳳香街休憩處"
         },
         "coords": {
-            "lat": 22.442222,
-            "lng": 114.033056
+            "lat": 22.442312,
+            "lng": 114.033345
         },
         "district": {
             "en": "Yuen Long",
@@ -15112,10 +15112,13 @@
             "en": "Fung Heung Street, Yuen Long",
             "zh": "元朗鳳香街"
         },
-        "equipment": [],
-        "park_images": [
-            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1914_1.jpg"
+        "equipment": [
+            {
+                "type": "others",
+                "images": ["overview_1"]
+            }
         ],
+        "park_images": ["overview_1"],
         "metrics": {
             "quality": null
         },
@@ -15128,8 +15131,8 @@
             "zh": "鳳群街花園"
         },
         "coords": {
-            "lat": 22.4425,
-            "lng": 114.034167
+            "lat": 22.442492,
+            "lng": 114.034188
         },
         "district": {
             "en": "Yuen Long",
@@ -15139,10 +15142,13 @@
             "en": "Fung Kwan Street, Yuen Long",
             "zh": "元朗鳳群街"
         },
-        "equipment": [],
-        "park_images": [
-            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1915_1.jpg"
+        "equipment": [
+            {
+                "type": "others",
+                "images": ["other_1", "other_2"]
+            }
         ],
+        "park_images": ["other_1"],
         "metrics": {
             "quality": null
         },
@@ -15344,8 +15350,8 @@
             "zh": "流浮山遊樂場"
         },
         "coords": {
-            "lat": 22.4675,
-            "lng": 113.984167
+            "lat": 22.466979,
+            "lng": 113.983404
         },
         "district": {
             "en": "Yuen Long",
@@ -15355,10 +15361,13 @@
             "en": "Lau Fau Shan, Yuen Long",
             "zh": "元朗流浮山"
         },
-        "equipment": [],
-        "park_images": [
-            "https://www.lcsd.gov.hk/file_upload_clpss/leisure_facilities/en/common/images/facilities/facilitieslist/fitness/1923_1.jpg"
+        "equipment": [
+            {
+                "type": "others",
+                "images": ["other_1", "other_2"]
+            }
         ],
+        "park_images": ["overview_1"],
         "metrics": {
             "quality": null
         },
