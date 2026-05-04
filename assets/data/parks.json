@@ -5494,6 +5494,70 @@
         "comment": ""
     },
     {
+        "id": "ko-cheung-court-garden",
+        "name": {
+            "en": "Ko Cheung Court Garden",
+            "zh": "高翔苑花園"
+        },
+        "coords": {
+            "lat": 22.29575351951801,
+            "lng": 114.24029001691441
+        },
+        "district": {
+            "en": "Kwun Tong",
+            "zh": "觀塘區"
+        },
+        "address": {
+            "en": "32 Ko Chiu Road, Yau Tong",
+            "zh": "油塘高超道32號"
+        },
+        "equipment": [
+            {
+                "type": "low_bar",
+                "images": ["overview_1"]
+            },
+            {
+                "type": "high_pull_up_bar",
+                "images": ["overview_1"]
+            }
+        ],
+        "park_images": ["overview_1"],
+        "metrics": {
+            "quality": null
+        },
+        "comment": ""
+    },
+    {
+        "id": "hong-lai-house-sitting-out-area",
+        "name": {
+            "en": "Hong Lai House Sitting-out Area",
+            "zh": "康麗樓休憩處"
+        },
+        "coords": {
+            "lat": 22.299171769473876,
+            "lng": 114.23668764295542
+        },
+        "district": {
+            "en": "Kwun Tong",
+            "zh": "觀塘區"
+        },
+        "address": {
+            "en": "9 Yau Tong Road, Yau Lai Estate, Yau Tong",
+            "zh": "油塘油塘道9號"
+        },
+        "equipment": [
+            {
+                "type": "high_pull_up_bar",
+                "images": ["overview_1"]
+            }
+        ],
+        "park_images": ["overview_1"],
+        "metrics": {
+            "quality": null
+        },
+        "comment": ""
+    },
+    {
         "id": "yuet-wah-street-playground",
         "name": {
             "en": "Yuet Wah Street Playground",
