@@ -28,6 +28,22 @@ let isHeaderCollapsed = window.innerWidth < RESPONSIVE_WIDTH;
 const collapseBtn = document.getElementById("collapse-btn");
 const collapseHeaderItems = document.getElementById("collapsed-header-items");
 
+const pagesDropdownBtn = document.getElementById("pages-dropdown-btn");
+const pagesDropdownMenu = document.getElementById("pages-dropdown-menu");
+
+if (pagesDropdownBtn && pagesDropdownMenu) {
+    pagesDropdownBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        pagesDropdownMenu.classList.toggle("tw-hidden");
+    });
+
+    window.addEventListener("click", (e) => {
+        if (!pagesDropdownMenu.contains(e.target)) {
+            pagesDropdownMenu.classList.add("tw-hidden");
+        }
+    });
+}
+
 function onHeaderClickOutside(e) {
     if (!collapseHeaderItems.contains(e.target)) {
         toggleHeader();
