@@ -6,7 +6,7 @@ export function createHobbyCard(hobby) {
                 <img
                     src="${hobby.image}"
                     class="tw-h-full tw-w-full tw-object-cover"
-                    alt="${hobby.title.toLowerCase()}"
+                    alt="Photo of ${hobby.title}"
                 />
             </div>
         </div>
@@ -28,7 +28,7 @@ export function createWorkCard(work) {
             <div class="tw-flex tw-h-[60px] tw-w-[60px] tw-overflow-hidden ${roundedClass}">
                 <img
                     src="${work.image}"
-                    alt="${work.company.toLowerCase()}"
+                    alt="${work.company} logo"
                     class="tw-h-full tw-w-full tw-object-cover"
                 />
             </div>
@@ -52,13 +52,13 @@ export function createBlogCard(blog) {
     <a
         href="${blog.url}"
         class="tw-flex tw-h-[400px] tw-w-[350px] tw-flex-col tw-gap-2 tw-overflow-clip tw-rounded-lg tw-bg-[#edecec79] tw-p-4 tw-shadow-xl max-lg:tw-w-[300px]"
+        aria-label="Read blog post: ${blog.title}"
     >
         <div class="tw-h-[200px] tw-w-full tw-overflow-hidden tw-rounded-md">
             <img
                 src="${blog.image}"
-                alt="article image"
+                alt="Thumbnail for ${blog.title}"
                 class="tw-h-full tw-w-full tw-object-cover"
-                srcset=""
             />
         </div>
         <h3 class="tw-text-2xl tw-font-semibold max-md:tw-text-xl">
@@ -67,9 +67,9 @@ export function createBlogCard(blog) {
         <p class="tw-mt-2 tw-text-gray-600">
             ${blog.description}
         </p>
-        <span>
+        <span class="tw-mt-auto">
             <span>Read</span>
-            <i class="bi bi-arrow-right"></i>
+            <i class="bi bi-arrow-right" aria-hidden="true"></i>
         </span>
     </a>
     `;

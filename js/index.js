@@ -23,7 +23,6 @@ if (blogsContainer) {
 
 const RESPONSIVE_WIDTH = 1024;
 
-const headerWhiteBg = false;
 let isHeaderCollapsed = window.innerWidth < RESPONSIVE_WIDTH;
 const collapseBtn = document.getElementById("collapse-btn");
 const collapseHeaderItems = document.getElementById("collapsed-header-items");
@@ -31,35 +30,66 @@ const collapseHeaderItems = document.getElementById("collapsed-header-items");
 const pagesDropdownBtn = document.getElementById("pages-dropdown-btn");
 const pagesDropdownMenu = document.getElementById("pages-dropdown-menu");
 
+let isPagesDropdownOpen = false;
+
 if (pagesDropdownBtn && pagesDropdownMenu) {
+    gsap.set(pagesDropdownMenu, { autoAlpha: 0, y: -10, display: "none" });
+    pagesDropdownMenu.classList.remove("tw-hidden");
+
     pagesDropdownBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        pagesDropdownMenu.classList.toggle("tw-hidden");
+        isPagesDropdownOpen = !isPagesDropdownOpen;
+
+        if (isPagesDropdownOpen) {
+            gsap.to(pagesDropdownMenu, {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.2,
+                display: "flex",
+                ease: "power2.out",
+            });
+        } else {
+            gsap.to(pagesDropdownMenu, {
+                autoAlpha: 0,
+                y: -10,
+                duration: 0.2,
+                display: "none",
+                ease: "power2.in",
+            });
+        }
     });
 
     window.addEventListener("click", (e) => {
-        if (!pagesDropdownMenu.contains(e.target)) {
-            pagesDropdownMenu.classList.add("tw-hidden");
+        if (isPagesDropdownOpen && !pagesDropdownMenu.contains(e.target)) {
+            isPagesDropdownOpen = false;
+            gsap.to(pagesDropdownMenu, {
+                autoAlpha: 0,
+                y: -10,
+                duration: 0.2,
+                display: "none",
+                ease: "power2.in",
+            });
         }
     });
 }
 
 function onHeaderClickOutside(e) {
-    if (!collapseHeaderItems.contains(e.target)) {
+    if (collapseHeaderItems && !collapseHeaderItems.contains(e.target)) {
         toggleHeader();
     }
 }
 
 function toggleHeader() {
+    if (!collapseHeaderItems || !collapseBtn) return;
+
     if (isHeaderCollapsed) {
-        // collapseHeaderItems.classList.remove("max-md:tw-opacity-0")
         collapseHeaderItems.classList.add("opacity-100");
         collapseHeaderItems.style.width = "60vw";
         collapseBtn.classList.remove("bi-list");
         collapseBtn.classList.add("bi-x", "max-lg:tw-fixed");
         isHeaderCollapsed = false;
 
-        setTimeout(() => window.addEventListener("click", onHeaderClickOutside), 1);
+        window.addEventListener("click", onHeaderClickOutside);
     } else {
         collapseHeaderItems.classList.remove("opacity-100");
         collapseHeaderItems.style.width = "0vw";
@@ -70,11 +100,16 @@ function toggleHeader() {
     }
 }
 
-// Make it global so HTML onclick can access it
-window.toggleHeader = toggleHeader;
+// Set up event listeners
+if (collapseBtn) {
+    collapseBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleHeader();
+    });
+}
 
 function responsive() {
-    if (window.innerWidth > RESPONSIVE_WIDTH) {
+    if (window.innerWidth > RESPONSIVE_WIDTH && collapseHeaderItems) {
         collapseHeaderItems.style.width = "";
     } else {
         isHeaderCollapsed = true;
@@ -89,58 +124,39 @@ window.addEventListener("resize", responsive);
 
 gsap.registerPlugin(ScrollTrigger);
 
-gsap.to(".reveal-hero-text", {
-    opacity: 0,
-    y: "100%",
-});
-
-gsap.to(".reveal-hero-img", {
-    opacity: 0,
-    y: "100%",
-});
-
-gsap.to(".reveal-up", {
-    opacity: 0,
-    y: "100%",
-});
-
 window.addEventListener("load", () => {
-    // animate from initial position
+    // animate from initial position (defined in CSS with opacity: 0)
     gsap.to(".reveal-hero-text", {
         opacity: 1,
         y: "0%",
         duration: 0.8,
-        // ease: "power3.out",
-        stagger: 0.5, // Delay between each word's reveal,
-        // delay: 3
+        stagger: 0.3,
     });
 
     gsap.to(".reveal-hero-img", {
         opacity: 1,
         y: "0%",
-    });
-});
-
-// ------------- reveal section animations ---------------
-
-const sections = gsap.utils.toArray("section");
-
-sections.forEach((sec) => {
-    const revealUptimeline = gsap.timeline({
-        paused: true,
-        scrollTrigger: {
-            trigger: sec,
-            start: "10% 80%", // top of trigger hits the top of viewport
-            end: "20% 90%",
-            // markers: true,
-            // scrub: 1,
-        },
-    });
-
-    revealUptimeline.to(sec.querySelectorAll(".reveal-up"), {
-        opacity: 1,
         duration: 0.8,
-        y: "0%",
-        stagger: 0.2,
+    });
+
+    // reveal section animations
+    const sections = gsap.utils.toArray("section");
+
+    sections.forEach((sec) => {
+        const revealUptimeline = gsap.timeline({
+            paused: true,
+            scrollTrigger: {
+                trigger: sec,
+                start: "10% 80%",
+                end: "20% 90%",
+            },
+        });
+
+        revealUptimeline.to(sec.querySelectorAll(".reveal-up"), {
+            opacity: 1,
+            duration: 0.8,
+            y: "0%",
+            stagger: 0.2,
+        });
     });
 });

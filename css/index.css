@@ -12,12 +12,6 @@
 
 html {
     scroll-behavior: smooth;
-    font-family: "Roboto", sans-serif;
-}
-
-header {
-    /* background-color: #fff;
-    color: #000; */
 }
 
 header > .collapsible-header {
@@ -55,10 +49,6 @@ header > .collapsible-header {
     background-color: var(--header-link-hover);
 }
 
-.material-icons.md-40 {
-    font-size: 40px;
-}
-
 .primary-text-color {
     color: var(--primary-text-color);
 }
@@ -83,43 +73,6 @@ header > .collapsible-header {
     cursor: pointer;
 }
 
-.btn:hover {
-}
-
-.btn:disabled {
-    cursor: default;
-}
-
-.input {
-    padding: 10px;
-    background-color: transparent;
-    border-radius: 25px;
-    /* outline: none; */
-    min-width: 100px;
-    border: 2px solid #818080;
-    transition: border 0.3s;
-}
-
-.input:active,
-.input:focus,
-.input:focus-within {
-    border: 2px solid var(--input-focus-bd-color);
-}
-
-.input-error {
-    border-bottom: 3px solid #ff1e1e;
-}
-
-.input-error:focus-within {
-    border-bottom: 3px solid #fd0101;
-}
-
-/* Navigation dots styling */
-.dots-container {
-    text-align: center;
-    margin-top: 20px;
-}
-
 .footer-link {
     color: #0d0d0d;
     transition: color 0.3s;
@@ -129,49 +82,11 @@ header > .collapsible-header {
     color: var(--footer-link-hover);
 }
 
-.review-container {
-    position: relative;
-    max-width: 600px;
-    margin: auto;
-}
-
-.review-card {
-    box-shadow: 0px 2px 4px #757474a0;
-    border-radius: 15px;
-    /* width: 200px; */
-    /* height: 550px; */
-    padding: 10px;
-}
-
-/* --------- collapsible div ---------- */
-.collapsible {
-    background-color: #f3f0f0;
-    color: #2b2929;
-    /* cursor: pointer; */
-    padding: 5px;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 16px;
-    transition: 0.4s;
-}
-
-/* Style for the collapsible content */
-.content {
-    padding: 0 18px;
-    /* display: none; */
-    height: 0px;
-    overflow: hidden;
-    background-color: transparent;
-    transition: height 0.5s;
-    text-align: justify;
-    margin-top: 10px;
-}
-
-.collapsible .active,
-.collapsible:hover {
-    /* background-color: #dedddd; */
+/* Prevent FOUC for reveal animations */
+.reveal-hero-text,
+.reveal-hero-img,
+.reveal-up {
+    opacity: 0;
 }
 
 @media (min-width: 1024px) {
