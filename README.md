@@ -20,8 +20,11 @@ npm install
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Auto-fix ESLint issues
 - `npm run format` - Format all files with Prettier
-- `npm run images` - Optimise images from `_originals/` (incremental)
-- `npm run images:clean` - Full rebuild of optimised images
+
+## Standalone Projects
+
+- **[Park Searcher](./standalone_projects/park-searcher/)**: A web application to find street workout parks in Hong Kong.
+- **[LinkedIn Frame Maker](./standalone_projects/linkedin-frame-maker/)**: A simple web app to upload a profile picture and customize it with a frame/banner for LinkedIn.
 
 ## Tailwind build workflow
 
